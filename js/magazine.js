@@ -1580,3 +1580,78 @@
     }
   };
 })();
+
+
+/* =====================================================================
+   v31 · PENANDA SUSUNAN LANDSCAPE (seluruh 15 halaman)
+   Satu-satunya tugas blok ini: menyalakan penanda .land-lebar pada <html>
+   ketika perangkat genggam benar-benar berada dalam keadaan mendatar —
+   lebar <= 900px, orientasi mendatar, tinggi pandang <= 560px. Seluruh
+   aturan tampilannya HANYA ada di css/magazine.css (blok v31), jadi tidak
+   ada gaya yang ditulis dua kali.
+
+   Ketiga syarat penting:
+     · lebar <= 900px  -> halaman desktop (1440px) tidak pernah tersentuh;
+     · orientasi mendatar -> ponsel tegak 390x844 tetap satu kolom;
+     · tinggi <= 560px -> tablet mendatar (mis. 1024x600) memakai tata
+       letak desktop yang sudah ada, bukan bentuk genggam yang sempit.
+
+   Tanpa JavaScript: kelas tidak pernah dipasang dan halaman tampil normal
+   satu kolom — teks utuh, semua tautan tetap dapat diklik.
+   "Kurangi gerakan" tidak dipengaruhi: blok ini tidak menganimasikan apa
+   pun, hanya menambah/menghapus satu kelas.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  var root = document.documentElement;
+  var mq = null;
+  try {
+    mq = window.matchMedia("(max-width: 900px) and (orientation: landscape) and (max-height: 560px)");
+  } catch (e) { mq = null; }
+  if (!mq) return;   // mesin tanpa matchMedia: biarkan tampilan normal
+
+  var hint = null;
+
+  function apply() {
+    var on = !!mq.matches;
+
+    if (root.classList.contains("land-lebar") !== on) {
+      root.classList.toggle("land-lebar", on);
+    }
+
+    /* Petunjuk "geser mendatar" pada rail peta zona. Hanya hiasan
+       (aria-hidden) dan hanya ada selama bentuk mendatar aktif; tidak
+       pernah menutupi tautan karena ditempatkan pada baris kepala kartu. */
+    if (on) {
+      var rail = document.querySelector("[data-srail]");
+      var head = rail ? rail.querySelector(".srail-h") : null;
+      if (head && !head.querySelector(".land-hint")) {
+        if (!hint) {
+          hint = document.createElement("span");
+          hint.className = "land-hint";
+          hint.setAttribute("aria-hidden", "true");
+          hint.textContent = "\u21c4 geser mendatar";
+        }
+        head.appendChild(hint);
+      }
+    } else if (hint && hint.parentNode) {
+      hint.parentNode.removeChild(hint);
+    }
+  }
+
+  apply();
+  if (mq.addEventListener) mq.addEventListener("change", apply);
+  else if (mq.addListener) mq.addListener(apply);
+  window.addEventListener("orientationchange", apply, { passive: true });
+  window.addEventListener("resize", apply, { passive: true });
+  window.addEventListener("load", apply);
+
+  /* ekspos kecil untuk pengujian */
+  window.RWPLand = {
+    on: function () { return root.classList.contains("land-lebar"); },
+    mq: function () { return !!mq.matches; },
+    w: function () { return window.innerWidth; },
+    h: function () { return window.innerHeight; }
+  };
+})();

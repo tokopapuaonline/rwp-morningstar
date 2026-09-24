@@ -2,6 +2,34 @@
 
 Platform kajian **Marxisme Ilmiah** dan **Sosialisme Ilmiah** dengan analisis struktural mendalam atas **West Papua**.
 
+## Baru di v31 — Gaya Landscape Mobile (15 halaman)
+
+Seluruh 15 halaman kini punya **tata letak khusus untuk layar genggam yang mendatar** — bukan sekadar menumpuk satu kolom, melainkan memanfaatkan lebar layar secara mendatar.
+
+**Kapan bentuk ini dipakai.** Satu syarat tunggal yang dipakai bersama: **lebar ≤ 900px**, **orientasi mendatar**, dan **tinggi pandang ≤ 560px** (ponsel dimiringkan seperti 844×390 atau 640×360, atau jendela yang pendek & melebar). Tiga rambu penting:
+
+- Halaman **desktop (1440px) tidak pernah tersentuh** — syarat lebar ≤ 900px menjaga hal itu.
+- Ponsel **tegak 390×844 tetap satu kolom** seperti sebelumnya — syarat orientasi menjaga hal itu.
+- **Tablet mendatar (mis. 1024×600)** tetap memakai tata letak desktop yang sudah ada, bukan bentuk genggam yang sempit — syarat tinggi ≤ 560px menjaga hal itu.
+
+**Apa yang berubah saat bentuk mendatar aktif.**
+
+| Bagian | Bentuk mendatar |
+|---|---|
+| **Top Featured Area** (Zona 2) | kartu sorotan menjadi **rel mendatar** yang dapat digulir mendatar; kartu samping diletakkan sebaris (setiap kartu ± 300px, gulir mendatar) |
+| **Magazine Widget Area** (Zona 3) | widget menjadi **rel mendatar** (± 320px per kartu) |
+| **Rail peta zona** (Zona 4a) | berhenti menjadi kolom yang menempel, menjadi **SATU BARIS chip mendatar** yang dapat digulir mendatar; chip aktif tetap merah–emas dengan nomor zona |
+| **Sidebar Tab Area** (Zona 4b) | panel **chip tab mendatar** yang dapat digulir mendatar |
+| **Hero / karusel** | **lebih pendek & lebar** (tinggi dikunci satu nilai), isi di tengah, jarak dirapatkan |
+| **Galeri** | kartu galeri **3 kolom rapat** |
+| **Tipografi & jarak** | dirapatkan agar nyaman dibaca mendatar; footer 2 kolom |
+
+**Di mana aturannya diletakkan.** Seluruh aturan tampilan berada di **satu tempat** — blok `v31` pada `css/magazine.css` (bagian 31.1–31.13), semuanya di dalam `@media(max-width:900px)` sehingga tata letak desktop tidak berubah sama sekali. Blok `v31` pada `js/magazine.js` **hanya menyalakan penanda** `land-lebar` pada `<html>` berdasarkan satu `matchMedia()`; ia tidak menulis gaya apa pun dan **tidak memakai timer**. Jadi tidak ada aturan yang ditulis dua kali dan tidak ada risiko putaran ukur-ulang.
+
+**Tanpa JavaScript** kelas penanda tidak pernah dipasang, sehingga halaman tampil normal satu kolom — teks utuh dan semua tautan tetap dapat diklik.
+
+**Tidak merusak fitur yang sudah ada.** Bentuk mendatar tetap menghormati `prefers-reduced-motion` (seluruh transisi/animasi dan gulir-halus dimatikan, susunan mendatar tetap dipakai), mode gelap terang, dan aturan cetak (bentuk mendatar dilepas, halaman kembali satu kolom). Rail zona, panel mega menu "Tata Letak", anotasi glosarium otomatis, tombol "Jelajahi glosarium", penyaring kategori, kontrol tema tiga-mode, dan tautan footer semuanya tetap bekerja.
+
 ## Baru di v30 — Tombol "Jelajahi Glosarium" & Glosarium Tersaring per Kategori
 
 - **Tombol "Jelajahi glosarium" kini ada di akhir tiap artikel**, tepat **setelah isi artikel selesai dan sebelum blok Artikel Terkait** (`15 halaman`, termasuk `index.html`, `faq.html`, `forum.html`, dan `galeri-foto.html`). Tombol menautkan ke `glosarium.html?kategori=<kode>#filter` sehingga pembaca **langsung tiba di kategori yang relevan** dengan halaman yang baru saja dibaca.
@@ -33,7 +61,7 @@ Platform kajian **Marxisme Ilmiah** dan **Sosialisme Ilmiah** dengan analisis st
 - **Verifikasi**: tombol **terbukti membuka glosarium tersaring** di Chromium — `?kategori=E` → chip **E** aktif dengan **17 istilah** tampil; `?kategori=partai` → **A** aktif dengan **21 istilah**; `?kategori=c` → **C** aktif dengan **10 istilah**; tanpa parameter → **94 istilah** dan tanpa catatan. Kontras diukur pada latar gradien sebenarnya dan lulus di kedua mode.
 - **Satu cacat kontras nyata ditemukan & diperbaiki saat pengujian**: aturan situs `[data-theme=dark] a` mewarnai **setiap** tautan dengan merah-terang dan spesifisitasnya mengalahkan warna dasar tombol CTA, sehingga teks tombol emas menjadi merah di atas emas (**kontras 1,37 — gagal**). Ditambahkan aturan pengunci warna khusus elemen ini. Sesudahnya tombol emas **10,51** dan tombol hantu **9,86** di mode gelap.
 - **Semua warna diukur pada latar piksel sebenarnya** (potret kartu dengan teks dibuat transparan, sehingga gradien ikut terhitung): **86 baris teks × 2 mode → 86 LULUS, 0 di bawah 4,5.** Warna `.gc-note` juga dinaikkan `#c3b8ae → #d9cfc6` (7,43).
-- **Cache-buster dinaikkan ke `?v=30`** di seluruh 15 halaman, tanpa sisa `?v=29`.
+- **Cache-buster dinaikkan ke `?v=31`** di seluruh 15 halaman, tanpa sisa `?v=29`.
 
 ## Baru di v29 — Anotasi Glosarium Otomatis (Tooltip Istilah)
 
@@ -369,5 +397,6 @@ Ganti **`VIDEO_ID`** pada 3 tempat (`data-yt-id`, URL thumbnail, URL tonton) + j
 - Uji galeri: filter kategori menyaring kartu, lightbox membuka/menutup dengan tombol, panah, dan Esc
 - **v23**: meta & skrip AdSense tepat sekali di **14/14 halaman**; blok "Artikel Terkait" (6 kartu) dan widget sidebar (3 kartu) ada di **14/14 halaman** dengan tautan valid; tidak ada tautan internal menggantung; uji Chromium 390px & 1440px tanpa scroll horizontal; kontrol tema tiga-mode dan penghormatan `prefers-reduced-motion` terverifikasi pada halaman baru
 - **v24**: meta & skrip AdSense tepat sekali di **15/15 halaman**; blok "Artikel Terkait" (6 kartu) dan widget sidebar (3 kartu) ada di **15/15 halaman**, dengan kartu glosarium pada 7 halaman materi; **94 entri glosarium** dalam 7 kategori dengan tautan langsung dan rujukan silang tanpa tautan menggantung; filter glosarium diuji (mengetik menyaring, menghapus memulihkan, kategori menyaring, tanpa JavaScript seluruh entri tetap tampil); uji Chromium 390px & 1440px tanpa scroll horizontal di seluruh halaman
+- **v31**: gaya landscape mobile di **15/15 halaman**; tag HTML seimbang, kurung CSS seimbang, `node --check` bersih, tanpa tautan internal menggantung, meta & skrip AdSense tepat sekali di **15/15 halaman**; uji Chromium pada **390×844, 640×360, 844×390, dan 1440×900** tanpa scroll horizontal; susunan mendatar terverifikasi benar-benar mendatar (rel kartu unggulan & widget, rail zona satu baris, panel tab mendatar); tooltip glosarium, tombol "Jelajahi glosarium" + penyaring kategori, rail zona, kontrol tema tiga-mode, dan `prefers-reduced-motion` tetap berfungsi
 
 © 2026 Ruang West Papua (RWP) — konten bebas disebarluaskan untuk pendidikan.

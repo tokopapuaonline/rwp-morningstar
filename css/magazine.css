@@ -1411,3 +1411,274 @@
 [data-theme=dark] .glos-cta .gc-btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
 [data-theme=dark] .glos-cta .gc-btn:focus-visible{outline-color:var(--gold)}
 [data-theme=dark] .glos-note .gn-clear{color:var(--black)}
+
+/* =====================================================================
+   v31 · GAYA LANDSCAPE MOBILE (seluruh 15 halaman)
+   Susunan halaman dibuat MEMANFAATKAN LEBAR MENDATAR pada perangkat
+   genggam, bukan sekadar menumpuk satu kolom:
+     · Top Featured Area (Zona 2)    -> kartu sorotan jadi rel mendatar
+     · Magazine Widget Area (Zona 3) -> rel widget mendatar
+     · Rail peta zona (Zona 4a)      -> SATU BARIS chip mendatar yang
+                                        dapat digulir mendatar
+     · Sidebar Tab Area (Zona 4b)    -> panel chip tab mendatar
+     · Hero/karusel                  -> lebih pendek & lebar, isi tengah
+     · Tipografi & jarak             -> dirapatkan agar nyaman dibaca
+   Seluruh aturan ADITIF; tata letak desktop (> 900px) tidak berubah sama
+   sekali karena semua aturan berada di dalam @media(max-width:900px).
+   Palet tetap merah–hitam–emas; mode gelap, "kurangi gerakan", dan cetak
+   ikut ditangani. Tanpa JavaScript: aturan tetap berlaku bila perangkat
+   memang dalam orientasi mendatar (lihat 31.2).
+   ===================================================================== */
+
+/* ---------- 31.1 Hanya berlaku pada layar genggam ---------- */
+@media(max-width:900px){
+
+  /* ---------- 31.2 Pemicu susunan mendatar ----------
+     Keadaan "layar genggam mendatar" = lebar <= 900px DAN lebar > tinggi
+     DAN tinggi pandang <= 560px (ponsel dimiringkan, atau jendela pendek &
+     melebar). Blok v31 pada js/magazine.js menanyakan keadaan itu lewat
+     satu matchMedia() lalu menyalakan penanda .land-lebar pada <html>.
+     Dengan begitu seluruh aturan tampilan tetap HANYA ada di berkas ini.
+     Tanpa JavaScript: kelas tidak pernah dipasang, halaman tampil normal
+     satu kolom seperti sebelumnya — teks utuh dan tetap terbaca. */
+  html.land-lebar .land-hint{display:inline-flex}
+
+  /* ---------- 31.3 TOP FEATURED AREA -> rel kartu mendatar ---------- */
+  html.land-lebar .mf-grid{display:block}
+  html.land-lebar .mf-lead{
+    min-height:0!important;
+    height:min(clamp(190px,40vw,260px),58vh)!important;
+    margin-bottom:.8rem}
+  html.land-lebar .mf-lead img{opacity:.5}
+  html.land-lebar .mf-lead .mf-body{
+    height:auto;padding:.95rem 1.05rem 1rem;
+    background:linear-gradient(180deg,rgba(8,8,10,.05),rgba(8,8,10,.92) 58%)}
+  html.land-lebar .mf-lead .mf-kicker{margin-bottom:.45rem;font-size:.6rem;padding:.22rem .52rem}
+  html.land-lebar .mf-lead h3{font-size:1.1rem;margin-bottom:.3rem}
+  html.land-lebar .mf-lead p{display:none}
+  html.land-lebar .mf-side,
+  html.land-lebar .mf-grid>.mf-side{
+    display:flex!important;flex-wrap:nowrap;gap:.7rem;
+    grid-template-columns:none!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.15rem .1rem .5rem;scrollbar-width:thin}
+  html.land-lebar .mf-side::-webkit-scrollbar{height:6px}
+  html.land-lebar .mf-side::-webkit-scrollbar-thumb{background:var(--red);border-radius:6px}
+  html.land-lebar .mf-side .mf-card{
+    flex:0 0 auto;width:min(300px,78vw);padding:.6rem;gap:.62rem}
+  html.land-lebar .mf-side .mf-card .mf-thumb{width:74px;aspect-ratio:1/1}
+  html.land-lebar .mf-side .mf-card h4{font-size:.87rem;line-height:1.28}
+  html.land-lebar .mf-more-list{margin-top:.65rem}
+  html.land-lebar .mf-chip{font-size:.71rem;padding:.28rem .62rem}
+  @media(max-height:400px){
+    html.land-lebar .mf-side .mf-card p{display:none}
+  }
+
+  /* ---------- 31.4 MAGAZINE WIDGET AREA -> rel widget mendatar ---------- */
+  html.land-lebar .mag-widgets{margin-top:1.9rem;padding-top:1.5rem}
+  html.land-lebar .mag-widgets .mw-head{margin-bottom:.9rem}
+  html.land-lebar .mw-grid{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:.75rem;
+    grid-template-columns:none!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.15rem .1rem .5rem;scrollbar-width:thin}
+  html.land-lebar .mw-grid::-webkit-scrollbar{height:6px}
+  html.land-lebar .mw-grid::-webkit-scrollbar-thumb{background:var(--red);border-radius:6px}
+  html.land-lebar .mw-grid .mw-card{flex:0 0 auto;width:min(320px,80vw);padding:1rem 1.05rem}
+  html.land-lebar .mw-grid .mw-card.wide{width:min(440px,86vw);grid-column:auto}
+  html.land-lebar .mw-card h3{font-size:.96rem;margin-bottom:.5rem}
+
+  /* ---------- 31.5 RAIL PETA ZONA (Zona 4a) -> baris mendatar ----------
+     Rail berhenti menjadi kolom yang menempel dan menjadi pita mendatar
+     di atas artikel. Daftar isi panjang tetap ADA, tetapi dipendekkan
+     agar peta zona tidak terdorong ke bawah lipatan. */
+  html.land-lebar .z3col>.z-rail,
+  html.land-lebar .z-rail,
+  html.land-lebar .z-rail.rail2{
+    position:static!important;top:auto!important;
+    max-height:none!important;overflow:visible!important;
+    display:block!important;grid-template-columns:none!important;
+    flex-direction:column}
+  html.land-lebar .z-rail>.sw,
+  html.land-lebar .z-rail.rail2>.sw{flex:1 1 auto!important;min-width:0}
+  html.land-lebar .z-rail .sw-toc ol,
+  html.land-lebar .z-rail.rail2 .sw-toc ol{max-height:132px}
+  html.land-lebar .z-rail .sw-chips--rail{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding-bottom:.4rem;scrollbar-width:thin}
+  html.land-lebar .z-rail .sw-chips--rail .mf-chip{flex:0 0 auto}
+  html.land-lebar .srail{
+    background:transparent!important;border:none!important;
+    border-radius:0!important;box-shadow:none!important}
+  html.land-lebar .srail-h{
+    flex-direction:row;align-items:center;justify-content:space-between;
+    gap:.5rem;padding:.24rem .18rem .4rem;border-bottom:1px solid var(--line)}
+  html.land-lebar .srail-t{font-size:.81rem}
+  html.land-lebar .srail-c{min-width:0!important;text-align:left!important}
+  html.land-lebar .srail-body{display:block!important;padding:.08rem 0 0}
+  html.land-lebar .srail-track{display:none!important}
+  html.land-lebar .srail-list{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:.45rem;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.1rem .1rem .55rem;scrollbar-width:thin}
+  html.land-lebar .srail-list::-webkit-scrollbar{height:6px}
+  html.land-lebar .srail-list::-webkit-scrollbar-thumb{background:var(--red);border-radius:6px}
+  html.land-lebar .srail-list li{flex:0 0 auto}
+  html.land-lebar .srail-list a{
+    flex-direction:column;align-items:flex-start;gap:.05rem;
+    white-space:nowrap;padding:.32rem .6rem;border-radius:50px;
+    background:#ffffff0f;border:1px solid #ffffff1f}
+  html.land-lebar .srail-list .srail-n{font-size:.71rem;line-height:1.1;color:var(--gold)}
+  html.land-lebar .srail-list .srail-h2{font-size:.73rem;line-height:1.2}
+  html.land-lebar .srail-list .srail-s{display:none}
+  html.land-lebar .srail-list a.active{
+    background:var(--red);border-color:var(--gold);animation:none}
+  html.land-lebar .srail-list a.active .srail-h2,
+  html.land-lebar .srail-list a.active .srail-n{color:#fff}
+
+  /* ---------- 31.6 SIDEBAR TAB AREA (Zona 4b) -> panel tab mendatar ---- */
+  html.land-lebar .stab-tabs{
+    display:flex!important;flex-wrap:nowrap!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    gap:.38rem;padding:.46rem .5rem;scrollbar-width:thin}
+  html.land-lebar .stab-tabs::-webkit-scrollbar{height:6px}
+  html.land-lebar .stab-tabs::-webkit-scrollbar-thumb{background:var(--red);border-radius:6px}
+  html.land-lebar .stab-tabs a{flex:0 0 auto;font-size:.7rem;padding:.3rem .54rem}
+
+  /* ---------- 31.7 HERO / KARUSEL -> lebih pendek & lebar ----------
+     Tinggi hero DIKUNCI satu nilai supaya tinggi isi tidak pernah
+     berubah saat gulir — rail zona memakai pengukuran posisi dokumen. */
+  html.land-lebar .hero,
+  html.land-lebar .slider,
+  html.land-lebar .slider-track,
+  html.land-lebar .slide{
+    min-height:0!important;
+    height:min(clamp(210px,46vw,300px),62vh)!important}
+  html.land-lebar .slide{align-items:center}
+  html.land-lebar .slide-content{padding:1rem 0;max-width:min(680px,94%)}
+  html.land-lebar .slide-content h1{font-size:clamp(1.25rem,3.4vw,1.9rem);margin-bottom:.45rem}
+  html.land-lebar .slide-content .hero-sub{display:none}
+  html.land-lebar .hero-kicker{margin-bottom:.6rem;font-size:.67rem;padding:.3rem .68rem}
+  html.land-lebar .hero-cta{gap:.55rem}
+  html.land-lebar .slide-content .btn{padding:.55rem 1rem;font-size:.82rem}
+  html.land-lebar .hero-stats{margin-top:.9rem;padding-top:.8rem;gap:1.3rem}
+  html.land-lebar .hero-stats .stat b{font-size:1.15rem}
+  html.land-lebar .hero-stats .stat span{font-size:.72rem}
+  html.land-lebar .slider-btn{width:36px;height:36px;font-size:1rem}
+  html.land-lebar .slider-btn.prev{left:.6rem}
+  @media(max-height:400px){
+    html.land-lebar .hero-stats{display:none}
+  }
+
+  /* ---------- 31.8 Galeri & forum -> lebih mendatar ---------- */
+  html.land-lebar .gal-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:.5rem!important}
+  html.land-lebar .gal-toolbar{flex-wrap:wrap;gap:.4rem}
+
+  /* ---------- 31.9 Tipografi & jarak -> dirapatkan ---------- */
+  html.land-lebar .section{padding:2.3rem 0}
+  html.land-lebar .zn-sec-block{padding:1.5rem 0 0}
+  html.land-lebar .mag-featured-sec{padding:1.5rem 0 0}
+  html.land-lebar .rel-sec{padding:2.1rem 0 2.4rem}
+  html.land-lebar .glos-cta{margin-top:1.7rem}
+  html.land-lebar .article p{font-size:.96rem;line-height:1.68}
+  html.land-lebar .zn-head{font-size:.95rem;padding:.6rem .78rem}
+  html.land-lebar .zn-body{padding:1rem}
+  html.land-lebar .mega-band{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html.land-lebar .zn-foot-strip,
+  html.land-lebar .zn-foot-strip--4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html.land-lebar .gadget-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html.land-lebar .rel-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html.land-lebar .footer-grid{grid-template-columns:1fr 1fr!important;gap:1.5rem}
+  html.land-lebar .ap-card{flex-direction:row;text-align:left;gap:1.1rem;padding:1.15rem 1.25rem}
+  html.land-lebar .ap-social{justify-content:flex-start}
+  html.land-lebar .mag-shell,
+  html.land-lebar .mag-shell.side-left{
+    grid-template-columns:minmax(0,1fr)!important;gap:1.8rem}
+
+  /* ---------- 31.10 MODE GELAP: bentuk mendatar ---------- */
+  html.land-lebar .srail-h{border-bottom-color:#ffffff1f}
+  html.land-lebar .mf-lead .mf-body{
+    background:linear-gradient(180deg,rgba(8,8,10,.05),rgba(8,8,10,.94) 58%)}
+
+}  /* akhir @media(max-width:900px) */
+
+@media(max-width:900px){
+  /* 31.11 MODE GELAP (aturan terpisah agar selektor tema tetap spesifik) */
+  [data-theme=dark] html.land-lebar .srail-list a{
+    background:#ffffff14;border-color:#ffffff26}
+  [data-theme=dark] html.land-lebar .srail-h{border-bottom-color:#ffffff26}
+  [data-theme=dark] html.land-lebar .srail-list a.active{
+    background:var(--red);border-color:var(--gold)}
+  [data-theme=dark] html.land-lebar .srail-list a.active .srail-h2,
+  [data-theme=dark] html.land-lebar .srail-list a.active .srail-n{color:#fff}
+}
+@media(max-width:900px){
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme]).land-lebar .srail-list a{
+      background:#ffffff14;border-color:#ffffff26}
+    html:not([data-theme]).land-lebar .srail-h{border-bottom-color:#ffffff26}
+  }
+}
+
+/* ---------- 31.12 "KURANGI GERAKAN" ----------
+   Susunan mendatar tetap dipakai; animasi, transisi, gulir-halus mati. */
+@media(prefers-reduced-motion:reduce){
+  html.land-lebar .srail-list,
+  html.land-lebar .sw-chips--rail,
+  html.land-lebar .mf-side,
+  html.land-lebar .mw-grid,
+  html.land-lebar .stab-tabs{scroll-behavior:auto!important}
+  html.land-lebar .srail-list a,
+  html.land-lebar .mf-card,
+  html.land-lebar .mw-card,
+  html.land-lebar .stab-tabs a,
+  html.land-lebar .slide-content .btn{transition:none!important;animation:none!important}
+  html.land-lebar .srail-list a.active{animation:none!important;box-shadow:none!important}
+  html.land-lebar .mf-card:hover,
+  html.land-lebar .mw-card:hover{transform:none!important}
+  html.land-lebar .slider-track{transition:none!important}
+}
+
+/* ---------- 31.14 Perbaikan warisan: kolom .split tidak dapat menyusut ---
+   Pada 390px, blok ".split" (gaya lama style.css) memakai kolom 1fr yang
+   masih menyimpan minimum min-content, sehingga ".split-text" di dalamnya
+   melampaui layar dan menimbulkan gulir mendatar 11px. Cacat ini SUDAH ADA
+   sebelum v31 (terbukti identik pada salinan baseline), bukan akibat gaya
+   landscape; diperbaiki di sini karena syarat "tanpa gulir horizontal pada
+   390px" harus dipenuhi. minmax(0,1fr) + min-width:0 memulihkan kemampuan
+   menyusut tanpa mengubah susunan dua kolomnya di layar lebar. */
+@media(max-width:900px){
+  /* Susunan .split dipaksa SATU track dan setiap anaknya dimasukkan ke
+     track itu. Sebelumnya hanya satu track yang dideklarasikan sehingga
+     anak yang berada di kolom kedua (mis. .split-text pada varian
+     "media di kiri") jatuh ke track IMPLISIT yang lebarnya mengikuti isi
+     — akibatnya blok teks melebar 22px dari wadahnya dan menyisakan gulir
+     mendatar. grid-column:1 menutup celah itu, dan minmax(0,1fr) membuat
+     teks boleh menyusut. */
+  .split{grid-template-columns:minmax(0,1fr)!important}
+  .split>*{grid-column:1!important;min-width:0!important}
+  .split-text,.split-text>*,.check-list li{min-width:0}
+  /* Satu butir daftar periksa memuat kata panjang tanpa pemisah, sehingga
+     butir flex itu tidak dapat menyusut di bawah min-content. overflow-wrap
+     hanya memecah kata BILA memang tidak muat; lingkaran penanda dikunci
+     22px agar tidak ikut mengempis. */
+  .check-list li{overflow-wrap:break-word}
+  .check-list li>.ck{flex:0 0 22px}
+}
+@media print{
+  html.land-lebar .mf-side,
+  html.land-lebar .mw-grid,
+  html.land-lebar .srail-list,
+  html.land-lebar .stab-tabs,
+  html.land-lebar .sw-chips--rail{display:block!important;overflow:visible!important}
+  html.land-lebar .mf-side .mf-card,
+  html.land-lebar .mw-grid .mw-card{width:auto!important}
+  html.land-lebar .z-rail{display:none!important}
+}
