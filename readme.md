@@ -2,6 +2,67 @@
 
 Platform kajian **Marxisme Ilmiah** dan **Sosialisme Ilmiah** dengan analisis struktural mendalam atas **West Papua**.
 
+## Baru di v30 — Tombol "Jelajahi Glosarium" & Glosarium Tersaring per Kategori
+
+- **Tombol "Jelajahi glosarium" kini ada di akhir tiap artikel**, tepat **setelah isi artikel selesai dan sebelum blok Artikel Terkait** (`15 halaman`, termasuk `index.html`, `faq.html`, `forum.html`, dan `galeri-foto.html`). Tombol menautkan ke `glosarium.html?kategori=<kode>#filter` sehingga pembaca **langsung tiba di kategori yang relevan** dengan halaman yang baru saja dibaca.
+- **Kategori ditentukan dari isi artikel, bukan ditebak.** Seluruh 94 istilah glosarium dipetakan ke 7 kategori (A–G) dari `glosarium.html`, lalu kemunculan setiap istilah dihitung pada teks artikel tiap halaman (header, footer, sidebar, dan skrip dikecualikan):
+
+  | Halaman | Kategori tombol | Entri kategori |
+  |---|---|---:|
+  | `index.html` | E · Kelas & Ekonomi | 17 |
+  | `analisa-papua.html` | E · Kelas & Ekonomi | 17 |
+  | `marxisme.html` | E · Kelas & Ekonomi | 17 |
+  | `sosialisme.html` | E · Kelas & Ekonomi | 17 |
+  | `sosialisme-papua.html` | E · Kelas & Ekonomi | 17 |
+  | `sosialisme-ilmiah.html` | E · Kelas & Ekonomi | 17 |
+  | `anti-seksisme-patriarki.html` | E · Kelas & Ekonomi | 17 |
+  | `faq.html` | E · Kelas & Ekonomi | 17 |
+  | `forum.html` | E · Kelas & Ekonomi | 17 |
+  | `partai-organisasi-revolusioner.html` | A · Partai | 21 |
+  | `front-taktis-strategis.html` | C · Front & Aliansi | 10 |
+  | `analisa-marxisme-papua.html` | B · Organisasi | 15 |
+  | `hak-menentukan-nasib-sendiri-papua.html` | G · Nasional & Kolonial | 10 |
+  | `galeri-foto.html` | G · Nasional & Kolonial | 10 |
+  | `glosarium.html` | indeks 7 kategori (A–G) | 94 |
+
+- **Catatan pembanding otomatis**: bila ada kategori lain yang juga menonjol di halaman itu, tombol menampilkan baris kedua — mis. *"Setelah kategori utama di atas, istilah kategori Nasional & Kolonial paling banyak muncul di halaman ini: 10 kemunculan pada teks artikel."* **Catatan hanya muncul bila peringkat pertama dan kedua tidak seri**, supaya klaimnya selalu dapat dipertanggungjawabkan.
+- **Sisi `glosarium.html` menerima parameter URL**: `?kategori=E`, `?kategori=partai`, atau `#kategori-partai` semuanya dikenali. Halaman lalu **menyaring kategori itu**, menggulir ke panel cari & saring, mengganti judul panel menjadi *"Glosarium — kategori E. Kelas & Ekonomi"*, dan menampilkan catatan berisi tautan **"Tampilkan semua istilah"**. **Tanpa parameter, halaman glosarium tampil persis seperti sebelumnya** (perilaku bawaan situs tidak berubah).
+- **Penyaring asli tidak digantikan.** Blok v30 **memanggil chip kategori yang sudah ada** dari blok v24, jadi hitungan istilah, keadaan aktif chip, `Escape`, dan tombol "Tampilkan semua" bawaan tetap bekerja apa adanya.
+- **Halaman `glosarium.html` mendapat bentuk khusus**: bukan tombol satu kategori, melainkan **indeks 7 kategori** (A Partai 21 · B Organisasi 15 · C Front & Aliansi 10 · D Strategi & Taktik 13 · E Kelas & Ekonomi 17 · F Negara & Revolusi 8 · G Nasional & Kolonial 10) plus tautan ke panel saring dan tabel istilah ↔ halaman.
+- **Gaya aman**: palet merah–hitam–emas, kartu gradien dengan aksen tepi emas, **mode terang & gelap**, responsif (3 kolom → 2 kolom di ≤980 px → 1 kolom di ≤680 px), tanpa animasi saat `prefers-reduced-motion`, dan **tidak ikut tercetak** (`@media print`). **Tanpa JavaScript** tombol tetap berfungsi sebagai tautan biasa — hanya penyaringan otomatisnya yang tidak jalan.
+- **Verifikasi**: tombol **terbukti membuka glosarium tersaring** di Chromium — `?kategori=E` → chip **E** aktif dengan **17 istilah** tampil; `?kategori=partai` → **A** aktif dengan **21 istilah**; `?kategori=c` → **C** aktif dengan **10 istilah**; tanpa parameter → **94 istilah** dan tanpa catatan. Kontras diukur pada latar gradien sebenarnya dan lulus di kedua mode.
+- **Satu cacat kontras nyata ditemukan & diperbaiki saat pengujian**: aturan situs `[data-theme=dark] a` mewarnai **setiap** tautan dengan merah-terang dan spesifisitasnya mengalahkan warna dasar tombol CTA, sehingga teks tombol emas menjadi merah di atas emas (**kontras 1,37 — gagal**). Ditambahkan aturan pengunci warna khusus elemen ini. Sesudahnya tombol emas **10,51** dan tombol hantu **9,86** di mode gelap.
+- **Semua warna diukur pada latar piksel sebenarnya** (potret kartu dengan teks dibuat transparan, sehingga gradien ikut terhitung): **86 baris teks × 2 mode → 86 LULUS, 0 di bawah 4,5.** Warna `.gc-note` juga dinaikkan `#c3b8ae → #d9cfc6` (7,43).
+- **Cache-buster dinaikkan ke `?v=30`** di seluruh 15 halaman, tanpa sisa `?v=29`.
+
+## Baru di v29 — Anotasi Glosarium Otomatis (Tooltip Istilah)
+
+- **Kata istilah glosarium kini ditandai otomatis di dalam prosa artikel** dan memunculkan **tooltip** berisi istilah, padanan asing, kategori, dan definisi ringkas yang **diambil dari halaman `glosarium.html`** — sumber data yang sama, jadi definisi tooltip tidak pernah menyimpang dari glosarium.
+- **Sumber data**: 94 istilah glosarium (7 kategori) diekstrak langsung dari `glosarium.html` dan disimpan sebagai data terkompak di `js/magazine.js`; tooltip tidak memuat berkas tambahan.
+- **Pemicu**: kursor mendekati kata dengan jeda singkat 120 ms (tidak berkedip), **fokus keyboard** (Tab) untuk aksesibilitas, serta **ketuk** pada layar sentuh untuk membuka/menutup. Escape atau klik di luar menutup tooltip.
+- **Aman untuk teks**: anotasi bekerja pada token berbasis tag, sehingga **seluruh byte asli dipertahankan** dan hanya ada penyisipan `<span>`; teks artikel terbukti identik sebelum dan sesudah anotasi. Istilah **tidak pernah** ditandai di dalam judul, tautan, kode, tabel, tombol, glosarium, iklan, atau blok navigasi — hanya di dalam paragraf, butir daftar, kutipan, dan keterangan gambar.
+- **Batas wajar**: satu istilah hanya dianotasi sekali per blok, maksimum 3 anotasi per blok dan 420 per halaman, supaya prosa tetap enak dibaca.
+- **Tepi layar**: kartu tooltip diukur ulang setiap kali dibuka/digulir dan digeser agar tidak terpotong, dan dibalik ke atas bila ruang bawah tidak cukup.
+- **`prefers-reduced-motion`**: tanpa animasi muncul/hilang, dan perubahan preferensi diikuti tanpa memuat ulang.
+- **Tanpa JavaScript**: kata istilah tetap tampil sebagai teks biasa dengan garis bawah titik-titik — tidak ada konten yang hilang, tidak ada kotak kosong (tooltip dibuat sepenuhnya oleh JS).
+- **Mode terang & gelap** didukung penuh; tooltip tidak ikut tercetak (aturan `@media print`).
+- **Cache-buster dinaikkan ke `?v=29`** di seluruh halaman, tanpa sisa `?v=28`.
+
+## Baru di v28 — Rail Peta Zona pada `marxisme.html` & `sosialisme.html`
+
+- **Kartu "Peta Zona" kini juga ada di rail kiri (Zona 4a) `marxisme.html` dan `sosialisme.html`** — tujuh tautan zona berjangkar nyata di masing-masing halaman: `#zona-top-featured`, `#zona-artikel`, `#terkait`, `#zona-sidebar`, `#zona-widgets`, `#zona-author`, `#zona-footer`. Perilakunya **identik** dengan rail di `analisa-papua.html`: tautan aktif ditandai merah–emas dengan nomor dan keterangan "Zona N dari 7", dan rail otomatis menggulir agar tautan aktif selalu terlihat.
+- **Daftar Isi dipindah ke rail kiri.** Sebelumnya daftar isi 21–25 bab berada di sidebar kanan di dalam wadah berbatas tinggi, sehingga bab-bab bawah hanya bisa dicapai dengan menggulir sidebar. Kini daftar isi menjadi scrollspy rail (yang disorot = bab yang sedang dibaca), sama seperti `analisa-papua.html`. Markup `<nav data-side-toc>` tidak diubah, jadi blok daftar isi lama tetap bekerja — hanya warna sorotannya yang disesuaikan (`#fff1ec`, 4,93:1).
+- **Klik entri daftar isi memilih zona, bukan menggulir ke dasar halaman.** Karena anchor entri kini berada di dalam rail (di puncak dokumen), perilaku anchor bawaan akan melompat jauh ke bawah — klik "1. Dasar-Dasar Marxisme" mendarat di ≈36.000 px. Aturan v28b mengarahkannya ke **Artikel Utama** (atau **Artikel Terkait** untuk entri terakhir) sambil menandai zona itu di rail. `href` setiap entri **tidak diubah**, jadi perilaku tanpa JavaScript dan "buka di tab baru" tetap utuh.
+- **Yang bergulir adalah wadah rail** (`scrollTop`), **bukan posisi gulir halaman**; gulir rail hanya dipicu saat zona aktif benar-benar berpindah, dan gestur gulir manual pengunjung (< 300 ms) dihormati.
+- **`prefers-reduced-motion`**: gulir rail instan, denyut dimatikan, sorotan tetap bekerja. **Tanpa JavaScript**: kartu rail tetap tampil dan ketujuh tautan tetap dapat diklik.
+- **Empat bug nyata ditemukan & diperbaiki saat verifikasi**:
+  1. **Pembungkus `.z3col` sempat berada di bawah bagian unggulan** sehingga rail dan artikel jatuh ke baris berikutnya — rail 110 px sementara konten 341 px (seharusnya 644 px). Setelah pembungkus dipindah, geometri desktop menjadi **rail 110 / konten 644 / sidebar 320**.
+  2. **`scrollIntoView` ganda**: rail menggulir ke bab 1 sedangkan sidebar kanan menggulir ke bab dasar — dua wadah bergerak berlawanan dan salah satunya mengambil kendali gulir. Satu elemen kini hanya punya satu wadah yang dikendalikan.
+  3. **Modul v27 tidak dapat mengukur zona di halaman teori** (rail kiri dan sidebar kanan keduanya sticky pada jalur zona, sehingga posisinya bertumpuk dan zona 5–7 tidak pernah tersorot). Kartu bertanda `data-srail-engine="mz"` diserahkan ke modul v28 yang mengukur lewat `offsetTop` — kebal efek sticky dan wadah bergulir.
+  4. **Halaman tidak pernah selesai render (bug performa)**: `IntersectionObserver` memantau 7 zona sepanjang ±36.000 px dan setiap perubahan kecil tata letak memicunya lagi sehingga putaran `callback → rAF → DOM → callback` berjalan tanpa henti (`getComputedStyle` ribuan kali per bingkai). Pengamat itu dibuang — listener gulir ber-rAF-throttle sudah cukup — dan pembaruan kini dibatasi pada perubahan posisi gulir.
+- **CSS baru bersifat aditif** (`css/magazine.css` bagian v28, hanya `.z3col` / `.mag-shell` / `.rail2` / `.srail`), termasuk mode gelap, aturan cetak (rail tidak dicetak), dan `prefers-reduced-motion`. **JS baru** (`js/magazine.js` blok v28) mengekspos `window.RWPRailMZ` untuk verifikasi.
+- **Cache-buster dinaikkan ke `?v=28`** di seluruh 15 halaman, tanpa sisa `?v=27`.
+
 ## Baru di v27 — Sorotan Bergulir Otomatis pada Rail Zona 4a
 
 - **Kartu "Peta Zona" baru di rail kiri (Zona 4a) `analisa-papua.html`** — tujuh tautan zona berjangkar nyata: `#zona-mega-links`, `#zona-top-featured`, `#zona-magazine-widgets`, `#zona-sidebar`, `#zona-sidebar-tab`, `#zona-author`, `#zona-footer`.

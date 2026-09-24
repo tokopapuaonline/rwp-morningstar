@@ -1042,3 +1042,372 @@
   .srail-list a.active{animation:none!important}
 }
 
+
+/* =====================================================================
+   v28 · RAIL PETA ZONA UNTUK marxisme.html & sosialisme.html
+   Rail kiri (Zona 4a) yang sama seperti analisa-papua.html kini dipakai
+   kedua halaman teori. Kartu "Peta Zona" memakai markup & perilaku yang
+   identik; blok ini hanya menutup dua perbedaan nyata antara halaman:
+     (a) di analisa-papua.html artikel berada LANGSUNG di dalam kolom
+         konten, sedangkan marxisme/sosialisme masih membungkusnya dalam
+         .mag-shell. Bila .mag-shell dibiarkan sebagai grid 2 kolom di
+         dalam kolom konten selebar 644px, kolom kontennya menciut ke
+         ~300px dan blok .stab menyembul keluar layar (gulir samping).
+     (b) pada lebar < 1181px rail tidak lagi punya wadah gulir sendiri
+         (v27.2 hanya aktif di desktop), sehingga rail perlu disusun
+         ulang menjadi pita yang ringkas di atas artikel.
+   Seluruh aturan ADITIF dan hanya menyentuh .z3col / .mag-shell / .rail2,
+   jadi halaman lain tidak berubah. Warna mengikuti token situs
+   (merah–hitam–emas) di mode terang maupun gelap.
+   ===================================================================== */
+
+/* ---------- 28.1 Kerangka: .mag-shell di dalam kerangka zona ---------- */
+.z3col>*{min-width:0}
+.z3col>.mag-shell{display:block;width:100%;margin:0;gap:0}
+.z3col>.mag-shell>.mag-main,.z3col>.mag-shell>.mag-side{width:100%;min-width:0;max-width:100%}
+
+/* Elemen di luar .mag-shell (share-bar, widget majalah, profil penulis,
+   footer) WAJIB membentang penuh — tanpa ini mereka jatuh ke kolom rail
+   selebar 206px. */
+.z3col>.share-bar,.z3col>.mag-widgets,.z3col>.author-profile,
+.z3col>.site-footer,.z3col>.zn-sec-block{grid-column:1/-1}
+
+/* Header sticky menutupi puncak anchor — beri jarak gulir yang sama
+   dengan blok v26 pada halaman lain. */
+.z3col [id^="zona-"],#terkait{scroll-margin-top:96px}
+
+/* ---------- 28.2 Desktop: kerangka tiga kolom benar-benar dipakai ----
+   .mag-shell dilepas (display:contents) supaya .mag-main dan .mag-side
+   menjadi butir grid .z3col: kolom 1 rail, kolom 2 konten, kolom 3
+   sidebar — tepat seperti analisa-papua.html. Selektor anak pada .mag-shell
+   tetap berlaku karena CSS bekerja pada pohon DOM, bukan pohon kotak. */
+@media(min-width:1181px){
+  .z3col>.mag-shell{display:contents}
+}
+
+/* ---------- 28.3 Rail 4a: susunan khusus .rail2 ---------- */
+.z-rail.rail2 .sw-toc ol{max-height:300px}
+.z-rail.rail2 .sw-toc ol a{font-size:.78rem}
+.z-rail.rail2 .srail{margin-top:.1rem}
+.z-rail.rail2 .sw{margin-top:.6rem}
+
+/* Penghitung zona di kepala kartu TIDAK BOLEH mengubah tinggi kartu.
+   Bila teksnya membungkus, tinggi kartu berubah; di dekat dasar halaman
+   perubahan tinggi dokumen dapat menggulir-ulang (clamp) posisi gulir,
+   sehingga event scroll → ukur ulang → sorotan berganti → teks berganti →
+   tinggi berubah lagi: putaran tanpa henti yang membuat halaman tampak
+   memuat selamanya. Satu baris, lebar tetap, tidak boleh membungkus. */
+.z-rail.rail2 .srail-c{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  min-width:7.5em;text-align:right}
+.z-rail.rail2 .srail-t{white-space:nowrap}
+
+/* ---------- 28.4 Lebar menengah: rail jadi pita ringkas di atas artikel -- */
+@media(max-width:1180px){
+  .z3col>.mag-featured-sec{grid-column:1/-1;grid-row:2}
+  .z3col>.mag-shell{grid-column:1/-1;grid-row:3;display:grid;
+    grid-template-columns:minmax(0,1fr) 300px;gap:1.5rem;align-items:start;width:100%}
+  /* sidebar kanan tidak lagi menempel saat rail ada di atasnya */
+  .z3col>.mag-shell>.mag-side{position:static;top:auto;max-height:none;overflow:visible}
+  .z-rail.rail2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:.7rem;align-items:start}
+  .z-rail.rail2>.zn-head,.z-rail.rail2>.srail{grid-column:1/-1}
+  .z-rail.rail2>.sw{min-width:0}
+  .z-rail.rail2 .sw-toc ol{max-height:270px}
+}
+@media(max-width:1040px){
+  .z3col>.mag-shell{grid-template-columns:minmax(0,1fr)}
+  .z-rail.rail2{grid-template-columns:minmax(0,1fr)}
+  .z-rail.rail2>.zn-head,.z-rail.rail2>.srail{grid-column:auto}
+}
+
+/* ---------- 28.5 Ponsel: rail satu kolom, daftar isi dipendekkan ------- */
+@media(max-width:680px){
+  .z3col [id^="zona-"],#terkait{scroll-margin-top:80px}
+  .z-rail.rail2 .sw-toc ol{max-height:230px}
+  .z-rail.rail2 .srail-h{padding:.5rem .62rem}
+  .z-rail.rail2 .srail-body{padding:.42rem .4rem}
+}
+
+/* ---------- 28.6 "Kurangi gerakan": rail tanpa animasi ---------- */
+@media(prefers-reduced-motion:reduce){
+  .z-rail.rail2 .srail-thumb{transition:none!important}
+  .z-rail.rail2 .srail-list a{transition:none!important}
+}
+
+/* ---------- 28.7 Cetak: rail tidak ikut tercetak (sejalan v25.9) -------- */
+@media print{
+  .z3col>.mag-shell{display:block!important}
+  .z-rail.rail2,.srail{display:none!important}
+}
+
+/* ---------- 28.8 Desktop: tiga kolom dengan rail berdiri sendiri ---------
+   Bentuk akhir yang dipakai kedua halaman teori:
+     <div class="z3col"> <aside class="z-rail rail2">…</aside>
+                          <div class="mag-shell"> <main>…</main>
+                                                     <aside class="mag-side">…</aside>
+                          </div> </div>
+   Rail sengaja berada DI LUAR .mag-shell supaya share-bar, widget majalah,
+   profil penulis, dan footer tetap mengalir penuh lebar seperti sebelumnya
+   (footer berlatar hitam TIDAK boleh menyempit ke dalam kotak 1220px).
+   .mag-shell dilepas (display:contents) agar .mag-main dan .mag-side menjadi
+   butir grid .z3col — kolom 2 dan 3. Karena .z3col sudah dibatasi
+   width:min(1220px,94%), kolom 2 mendarat tetap di 644px pada desktop,
+   sama persis dengan halaman analisa-papua.html. */
+@media(min-width:1181px){
+  .z3col{grid-template-columns:206px minmax(0,964px) 320px;
+    justify-content:center;column-gap:1.55rem}
+  /* Baris 1 = bagian unggulan; baris 2 = artikel. Rail kiri & sidebar kanan
+     membentang KEDUA baris supaya keduanya sticky setinggi seluruh isi
+     halaman, dan kolom 2 terisi pada baris pertama (tanpa aturan ini bagian
+     unggulan jatuh ke baris 2 dan meninggalkan kolom 2/3 kosong di baris 1). */
+  .z3col>.z-rail.rail2{grid-column:1;grid-row:1/-1}
+  .z3col>.mag-featured-sec{grid-column:2;grid-row:1}
+  .z3col>.mag-shell>.mag-main{grid-column:2;grid-row:2}
+  .z3col>.mag-shell>.mag-side{grid-column:3;grid-row:1/-1}
+}
+
+/* ---------- 28.9 Bila daftar isi berada di dalam rail -------------------
+   Sama seperti kartu Peta Zona: latar merah, teks #fff1ec (4,93:1). */
+.z-rail .sw-toc ol a.cur:before{color:#fff}
+.z-rail .sw-toc ol a.cur,.z-rail .sw-toc ol a.cur:hover{color:#fff1ec}
+
+/* ---------- 28.10 Rail mandiri di bawah 1181px: pita di atas artikel ---- */
+@media(max-width:1180px){
+  .z3col>.z-rail.rail2{grid-column:1/-1;grid-row:1}
+}
+
+/* ---------- 28.11 "Kurangi gerakan": rail tanpa transisi ---------------- */
+@media(prefers-reduced-motion:reduce){
+  .z-rail.rail2 .sw-toc ol a{transition:none!important}
+}
+
+/* ---------- 28.12 Wadah gulir rail juga di tablet & ponsel -------------
+   v27.2 hanya menjadikan rail wadah gulir di desktop (>=1181px). Tanpa
+   aturan ini, di lebar yang lebih sempit kartu Peta Zona terletak di puncak
+   halaman dan sudah jauh di atas layar saat pembaca sampai ke zona bawah —
+   sorotan tidak akan pernah terlihat. Sisi ramah: tinggi dibatasi supaya
+   rail tetap pita ringkas, bukan panel setinggi layar; bila isinya pendek,
+   max-height tidak aktif dan rail mengalir normal tanpa scrollbar. */
+@media(max-width:1180px){
+  .z-rail.rail2{position:sticky;top:96px;max-height:min(100vh - 128px,520px);
+    overflow-y:auto;overscroll-behavior:contain}
+  .z-rail.rail2>*{flex:0 0 auto;min-width:0}
+}
+@media(max-width:680px){
+  .z-rail.rail2{top:80px;max-height:min(100vh - 112px,430px)}
+}
+
+/* =====================================================================
+   v29 · ANOTASI GLOSARIUM — TOOLTIP ISTILAH
+   Dipakai oleh blok v29 di js/magazine.js. Kata istilah di dalam prosa
+   artikel ditandai <span class="rwp-term" data-glos="slug" tabindex="0">.
+   Gaya .rwp-term sengaja hanya garis bawah titik-titik supaya teks tetap
+   terbaca normal bila JavaScript dimatikan; tooltip itu sendiri dibuat
+   oleh JS (.rwp-tip) sehingga tidak mungkin menyisakan kotak kosong.
+   ===================================================================== */
+.rwp-term{
+  border-bottom:1px dotted rgba(192,57,43,.6);
+  cursor:help;
+  text-underline-offset:2px;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+.rwp-term:hover,
+.rwp-term:focus-visible,
+.rwp-term.rwp-open{
+  background:rgba(232,182,76,.22);
+  border-bottom-color:var(--red);
+}
+.rwp-term:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+[data-theme="dark"] .rwp-term{border-bottom-color:rgba(232,182,76,.55)}
+[data-theme="dark"] .rwp-term:hover,
+[data-theme="dark"] .rwp-term:focus-visible,
+[data-theme="dark"] .rwp-term.rwp-open{background:rgba(232,182,76,.18)}
+
+/* --- kartu tooltip --- */
+.rwp-tip{
+  position:fixed;
+  z-index:88;
+  left:0;top:0;
+  width:min(330px,calc(100vw - 20px));
+  background:#fffdf7;
+  color:var(--text);
+  border:1px solid rgba(192,57,43,.35);
+  border-left:4px solid var(--gold);
+  border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-lg);
+  padding:.85rem 1rem .9rem;
+  text-align:left;
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity .16s ease,transform .16s ease;
+  pointer-events:none;
+}
+.rwp-tip[hidden]{display:none}
+.rwp-tip.rwp-tip-on{opacity:1;transform:translateY(0);pointer-events:auto}
+.rwp-tip.rwp-tip-below{transform:translateY(-4px)}
+.rwp-tip.rwp-tip-below.rwp-tip-on{transform:translateY(0)}
+[data-theme="dark"] .rwp-tip{
+  background:#14141a;
+  color:#e9e4da;
+  border-color:rgba(232,182,76,.35);
+  border-left-color:var(--gold);
+}
+.rwp-tip .rwp-tip-cat{
+  display:inline-block;
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--red);
+  background:rgba(192,57,43,.1);
+  border-radius:50px;
+  padding:.15rem .5rem;
+  margin-bottom:.4rem;
+}
+[data-theme="dark"] .rwp-tip .rwp-tip-cat{color:var(--gold);background:rgba(232,182,76,.14)}
+.rwp-tip .rwp-tip-ist{
+  display:block;
+  font-family:var(--display);
+  font-size:1.02rem;
+  line-height:1.3;
+  color:var(--ink);
+  margin-bottom:.1rem;
+}
+[data-theme="dark"] .rwp-tip .rwp-tip-ist{color:#fff}
+.rwp-tip .rwp-tip-asing{
+  display:block;
+  font-size:.74rem;
+  font-style:italic;
+  color:var(--muted);
+  margin-bottom:.45rem;
+}
+.rwp-tip .rwp-tip-def{
+  display:block;
+  font-size:.85rem;
+  line-height:1.55;
+  color:var(--text);
+}
+.rwp-tip .rwp-tip-link{
+  display:inline-block;
+  margin-top:.55rem;
+  font-size:.75rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:var(--red);
+}
+.rwp-tip .rwp-tip-link:hover{color:var(--gold)}
+
+/* --- hormati preferensi "kurangi gerakan" --- */
+@media (prefers-reduced-motion: reduce){
+  .rwp-term{transition:none}
+  .rwp-tip{transition:none;transform:none}
+  .rwp-tip.rwp-tip-below{transform:none}
+}
+/* --- cetak: tooltip tidak ikut tercetak, garis bantu dihilangkan --- */
+@media print{
+  .rwp-tip{display:none}
+  .rwp-term{border-bottom:0;background:none}
+}
+/* --- layar sangat sempit: tooltip menyisakan margin lebih lega --- */
+@media (max-width:420px){
+  .rwp-tip{width:calc(100vw - 16px);padding:.75rem .85rem .8rem}
+  .rwp-tip .rwp-tip-def{font-size:.82rem}
+}
+
+
+/* =====================================================================
+   v30 · TOMBOL "JELAJAHI GLOSARIUM" + CATATAN PENYARING KATEGORI
+   Dipakai oleh tombol di akhir tiap artikel (lihat bagian v30 di HTML)
+   dan oleh blok v30 di js/magazine.js. Palet merah–hitam–emas, lengkap
+   untuk mode terang & gelap, ramah cetak, menghormati "kurangi gerakan".
+   Tanpa JavaScript: tautan tetap berfungsi sebagai tautan biasa.
+   ===================================================================== */
+.glos-cta{position:relative;overflow:hidden;width:min(1180px,92%);margin:2.8rem auto 0;
+  background:linear-gradient(120deg,var(--black) 0%,var(--red-deep) 58%,var(--red-dark) 100%);
+  border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:1.9rem 2rem 2rem;
+  border-left:6px solid var(--gold);display:grid;grid-template-columns:auto 1fr auto;
+  gap:1.4rem;align-items:center}
+.glos-cta:before{content:"";position:absolute;top:-70px;right:-50px;width:220px;height:220px;
+  border-radius:50%;background:#e8b64c14;pointer-events:none}
+.glos-cta .gc-ic{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-size:1.6rem;background:#e8b64c1f;border:1px solid rgba(232,182,76,.45);
+  color:var(--gold);position:relative;z-index:1;flex-shrink:0}
+.glos-cta .gc-body{position:relative;z-index:1;min-width:0}
+.glos-cta .gc-eyebrow{display:block;font-size:.68rem;font-weight:800;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.35rem}
+.glos-cta .gc-title{color:#fff;font-size:1.26rem;margin-bottom:.4rem;line-height:1.25}
+.glos-cta .gc-title b{color:var(--gold);font-weight:700}
+.glos-cta p{color:#e2d8cf;font-size:.9rem;margin:0}
+.glos-cta p b{color:#fff}
+.glos-cta .gc-note{color:#d9cfc6;font-size:.78rem;margin-top:.45rem;line-height:1.5}
+.glos-cta .gc-act{position:relative;z-index:1;display:flex;flex-direction:column;gap:.55rem;flex-shrink:0}
+.gc-btn{display:inline-flex;align-items:center;gap:.5rem;justify-content:center;padding:.78rem 1.25rem;
+  border-radius:9px;font-weight:800;font-size:.9rem;white-space:nowrap;
+  transition:transform .2s,background .2s,border-color .2s,color .2s}
+.gc-btn-primary{background:var(--gold);color:var(--black)}
+.gc-btn-primary:hover{background:var(--gold-light);color:var(--black);transform:translateY(-2px)}
+.gc-btn-ghost{border:1px solid rgba(255,255,255,.4);color:#fff}
+.gc-btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.gc-btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* mode gelap: gradien dinaikkan sedikit agar batas kartu tetap terbaca */
+[data-theme=dark] .glos-cta{background:linear-gradient(120deg,#0c0c10 0%,#6e1b13 58%,#932c1f 100%)}
+/* catatan penyaring di glosarium.html (dibuat oleh JS v30) */
+.glos-note{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;background:#c0392b14;
+  border:1px solid rgba(192,57,43,.45);border-left:5px solid var(--red);border-radius:var(--radius-sm);
+  padding:.85rem 1.1rem;margin:0 0 1.1rem}
+.glos-note[hidden]{display:none}
+.glos-note .gn-ic{font-size:1.15rem;flex-shrink:0}
+.glos-note .gn-txt{font-size:.9rem;color:var(--ink);flex:1 1 260px}
+.glos-note .gn-txt b{color:var(--red)}
+.glos-note .gn-clear{background:var(--gold);color:var(--black);border-radius:50px;padding:.45rem 1rem;
+  font-size:.8rem;font-weight:800;white-space:nowrap}
+.glos-note .gn-clear:hover{background:var(--gold-light);color:var(--black)}
+[data-theme=dark] .glos-note{background:#c0392b1f;border-color:rgba(232,182,76,.4)}
+[data-theme=dark] .glos-note .gn-txt{color:#e6e1d7}
+[data-theme=dark] .glos-note .gn-txt b{color:var(--gold)}
+/* --- responsif --- */
+@media(max-width:980px){
+  .glos-cta{grid-template-columns:auto 1fr;padding:1.6rem 1.5rem;gap:1.1rem}
+  .glos-cta .gc-act{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap}
+  .gc-btn{flex:1 1 auto;min-width:190px}
+}
+@media(max-width:680px){
+  .glos-cta{grid-template-columns:1fr;gap:1rem;padding:1.4rem 1.2rem;border-left-width:5px;margin-top:2rem}
+  .glos-cta .gc-ic{width:46px;height:46px;font-size:1.35rem}
+  .glos-cta .gc-title{font-size:1.12rem}
+  .glos-cta .gc-act{flex-direction:column}
+  .gc-btn{min-width:0;width:100%}
+  .glos-note{padding:.75rem .9rem}
+  .glos-note .gn-clear{width:100%;text-align:center}
+}
+/* --- pengurangan gerakan --- */
+@media(prefers-reduced-motion:reduce){
+  .gc-btn{transition:none}
+  .gc-btn:hover{transform:none}
+}
+/* --- cetak: tombol navigasi tidak ikut tercetak --- */
+@media print{
+  .glos-cta{display:none}
+  .glos-note{display:none}
+}
+
+/* v30 · varian kompak + indeks kategori (dipakai di glosarium.html) */
+.glos-cta .gc-act--wrap{flex-direction:row;flex-wrap:wrap}
+.gc-btn-sm{padding:.5rem .8rem;font-size:.78rem;font-weight:700;letter-spacing:.01em}
+.glos-cta .gc-cats{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.glos-cta .gc-cats a{font-size:.74rem;font-weight:700;color:#fff;background:#ffffff1a;
+  border:1px solid rgba(255,255,255,.28);border-radius:50px;padding:.26rem .62rem}
+.glos-cta .gc-cats a:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+[data-theme=dark] .glos-cta .gc-cats a{background:#ffffff14;border-color:rgba(232,182,76,.35)}
+@media(max-width:680px){.glos-cta .gc-act--wrap{flex-direction:column}}
+
+/* v30 · mode gelap: aturan situs `[data-theme=dark] a` mewarnai SETIAP tautan
+   dengan merah-terang, dan spesifisitasnya mengalahkan warna dasar tombol CTA.
+   Akibatnya teks tombol emas menjadi merah di atas emas (kontras 1,37 — gagal).
+   Aturan berikut mengunci warna eksplisit untuk elemen ini saja. */
+[data-theme=dark] .glos-cta .gc-btn-primary{color:var(--black)}
+[data-theme=dark] .glos-cta .gc-btn-primary:hover{color:var(--black);background:var(--gold-light)}
+[data-theme=dark] .glos-cta .gc-btn-ghost{color:#fff}
+[data-theme=dark] .glos-cta .gc-btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
+[data-theme=dark] .glos-cta .gc-btn:focus-visible{outline-color:var(--gold)}
+[data-theme=dark] .glos-note .gn-clear{color:var(--black)}
