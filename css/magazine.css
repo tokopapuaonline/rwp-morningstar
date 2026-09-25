@@ -1682,3 +1682,400 @@
   html.land-lebar .mw-grid .mw-card{width:auto!important}
   html.land-lebar .z-rail{display:none!important}
 }
+
+/* =====================================================================
+   v32 · VARIAN LANDSCAPE TABLET MENDATAR (901–1180px, layar pendek)
+   Varian KETIGA dari keluarga tata letak mendatar, berdampingan dengan
+   varian ponsel mendatar v31 (<= 900px / tinggi <= 560px) yang TIDAK
+   diubah sama sekali.
+
+   Keadaan yang dilayani: tablet mendatar (mis. 1024x600) dan jendela
+   pendek-melebar 901–1180px. Pada rentang itu tata letak aslinya sudah
+   menumpuk untuk layar TEGAK — daftar isi 340px, hero 560px, rel kartu
+   selebar penuh — sehingga tinggi halaman membengkak dan tinggi layar
+   600px nyaris tidak terpakai. Blok ini memindahkan beban ke LEBAR:
+     · Top Featured Area (Zona 2)    -> kartu sorotan lebih pendek, rel
+                                        kartu pendamping mendatar
+     · Magazine Widget Area (Zona 3) -> rel widget mendatar
+     · Rail peta zona (Zona 4a)      -> SATU BARIS chip mendatar yang
+                                        dapat digulir mendatar
+     · Sidebar Tab Area (Zona 4b)    -> panel chip tab mendatar
+     · Hero/karusel                  -> jauh lebih pendek
+     · Daftar isi rail               -> dipendekkan
+     · Tipografi & jarak             -> dirapatkan
+
+   PEMISAHAN DARI VARIAN PONSEL — dua penjaga, bukan satu:
+     (a) berkas ini membungkus seluruh aturan dalam
+         @media(min-width:901px) and (max-width:1180px), sehingga tidak
+         mungkin menyentuh layar <= 900px;
+     (b) setiap selektor memakai penanda html.land-tab yang dinyalakan
+         blok v32 pada js/magazine.js lewat matchMedia()
+         "(min-width: 901px) and (max-width: 1180px) and
+          (orientation: landscape) and (max-height: 640px)".
+   Ambang tinggi 640px (bukan 560px seperti v31) dipilih karena tablet
+   mendatar 1024x600 menyisakan ruang untuk bilah peramban, sehingga tinggi
+   pandangnya nyata-nyata jatuh ke bawah 600px.
+   Tanpa salah satu penjaga itu, aturan tablet akan ikut menimpa rel ponsel
+   mendatar dan merusak varian v31. Karena itu keduanya dipasang.
+
+   Cakupan lebar: 901–1180px, yaitu tepat di bawah titik desktop v28
+   (min-width:1181px). Dengan begini varian tablet TIDAK pernah bertabrakan
+   dengan susunan tiga kolom desktop di atasnya maupun tata letak menumpuk
+   <= 900px di bawahnya.
+
+   Palet tetap merah–hitam–emas; mode gelap, "kurangi gerakan", dan cetak
+   ikut ditangani. Tanpa JavaScript: kelas tidak pernah dipasang, halaman
+   tampil menumpuk normal — teks utuh dan semua tautan tetap dapat diklik.
+   ===================================================================== */
+
+/* ---------- 32.1 Pemicu susunan mendatar tablet ---------- */
+@media(min-width:901px) and (max-width:1180px){
+
+  html.land-tab .land-hint{display:inline-flex;align-items:center;gap:.3rem;
+    font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap}
+
+  /* ---------- 32.2 TOP FEATURED AREA -> kartu sorotan pendek ----------
+     Kartu sorotan dipendekkan supaya bagian unggulan tidak menghabiskan
+     tinggi layar 600px; deskripsinya disembunyikan pada tinggi sekecil ini
+     dan sisanya dirapatkan. Tiga kartu pendampingnya menjadi rel mendatar
+     pada 32.10 (lihat catatan di sana). */
+  html.land-tab .mf-lead{
+    min-height:0!important;
+    height:min(clamp(200px,30vw,290px),54vh)!important}
+  html.land-tab .mf-lead p{display:none}
+  html.land-tab .mf-lead h3{font-size:1.18rem;margin-bottom:.35rem}
+  html.land-tab .mf-lead .mf-body{padding:1.1rem 1.2rem}
+  html.land-tab .mf-lead .mf-kicker{margin-bottom:.55rem}
+  html.land-tab .mf-more-list{margin-top:.8rem}
+
+  /* ---------- 32.3 MAGAZINE WIDGET AREA -> 2–3 kolom -----------------
+     Pada 901–1140px susunan aslinya baru 2 kolom; di sini dinaikkan
+     menjadi 3 supaya lebar layar benar-benar terpakai. Di atas 1140px
+     susunan aslinya sudah 4 kolom, jadi dibiarkan. */
+  html.land-tab .mag-widgets{margin-top:2.2rem;padding-top:1.8rem}
+  html.land-tab .mag-widgets .mw-head{margin-bottom:1.1rem}
+  @media(max-width:1140px){
+    html.land-tab .mw-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  }
+  html.land-tab .mw-card h3{font-size:1rem;margin-bottom:.55rem}
+
+  /* ---------- 32.4 RAIL PETA ZONA (Zona 4a) -> baris chip mendatar ---
+     Rail berhenti menjadi kolom; ia menjadi pita mendatar tepat di atas
+     artikel. Seluruh anak rail dibiarkan penuh lebar (satu kolom grid)
+     supaya tidak ada sel kosong dan tidak ada blok yang terjepit di
+     sepertiga lebar. Yang menggulir adalah DAFTAR CHIP-nya (overflow-x),
+     sedangkan wadah rail sendiri dibiarkan tanpa gulir — dengan begitu
+     sorotan bergulir otomatis blok v27/v28 tetap bekerja persis seperti
+     sebelumnya (ia menggulir .z-rail di desktop, dan di sini tidak perlu
+     menggulir apa pun karena semua chip sudah sebaris). */
+  html.land-tab .z3col .z-rail,
+  html.land-tab .z-rail.rail2{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:.7rem;align-items:start}
+  html.land-tab .z3col .z-rail>.zn-head,
+  html.land-tab .z-rail.rail2>.zn-head,
+  html.land-tab .z3col .z-rail>.srail,
+  html.land-tab .z-rail.rail2>.srail{grid-column:1/-1}
+  html.land-tab .z-rail{
+    position:static!important;top:auto!important;
+    max-height:none!important;overflow:visible!important;
+    padding-right:0!important}
+  html.land-tab .z-rail .sw-toc ol,
+  html.land-tab .z-rail.rail2 .sw-toc ol{max-height:150px}
+  html.land-tab .z-rail .sw{padding:.85rem .9rem}
+  html.land-tab .z-rail.rail2 .sw{margin-top:0}
+
+  /* deretan label cepat (Lintasan & Indeks, Teori, …) juga jadi satu baris */
+  html.land-tab .z-rail .sw-chips--rail{
+    flex-wrap:nowrap!important;gap:.4rem;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.12rem .1rem .45rem;scrollbar-width:thin}
+  html.land-tab .z-rail .sw-chips--rail::-webkit-scrollbar{height:6px}
+  html.land-tab .z-rail .sw-chips--rail::-webkit-scrollbar-thumb{background:var(--red);border-radius:6px}
+  html.land-tab .z-rail .sw-chips--rail .mf-chip{flex:0 0 auto}
+
+  /* kartu peta zona: latar dilepas supaya chip menempel pada halaman */
+  html.land-tab .srail{background:transparent!important;border:none!important;
+    border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+  html.land-tab .srail-h{
+    flex-direction:row;align-items:center;justify-content:space-between;gap:.6rem;
+    padding:.34rem .2rem .5rem;border-bottom:1px solid var(--line);
+    background:transparent!important;box-shadow:none!important}
+  html.land-tab .srail-t{font-size:.86rem;color:var(--ink)}
+  html.land-tab .srail-c{min-width:0!important;text-align:left!important;white-space:nowrap}
+
+  html.land-tab .srail-body{display:block!important;padding:.12rem 0 0}
+  html.land-tab .srail-track{display:none!important}
+
+  /* daftar chip mendatar — inilah wadah gulirnya */
+  html.land-tab .srail-list{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:.5rem;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.18rem .1rem .6rem;scrollbar-width:thin}
+  html.land-tab .srail-list::-webkit-scrollbar{height:7px}
+  html.land-tab .srail-list::-webkit-scrollbar-thumb{background:var(--red);border-radius:7px}
+  html.land-tab .srail-list li{flex:0 0 auto}
+  html.land-tab .srail-list a{
+    flex-direction:column;align-items:flex-start;gap:.06rem;
+    white-space:nowrap;padding:.36rem .7rem;border-radius:50px;
+    background:var(--white-2);border:1px solid var(--line)}
+  html.land-tab .srail-list a:hover{background:#c0392b14;border-color:var(--red)}
+  html.land-tab .srail-list .srail-n{font-size:.72rem;line-height:1.1;color:var(--red)}
+  html.land-tab .srail-list .srail-h2{font-size:.76rem;line-height:1.22;color:var(--ink)}
+  html.land-tab .srail-list .srail-s{display:none}
+  html.land-tab .srail-list a.active{
+    background:var(--red);border-color:var(--gold);animation:none}
+  html.land-tab .srail-list a.active .srail-h2,
+  html.land-tab .srail-list a.active .srail-n{color:#fff}
+  /* sublabel disembunyikan pada bentuk ini, tetapi WARNA-nya tetap
+     ditetapkan jaga-jaga bila ada varian halaman yang menampilkannya. */
+  html.land-tab .srail-list a.active .srail-s{color:#fff1ec}
+
+  /* ---------- 32.5 SIDEBAR TAB AREA (Zona 4b) -> panel tab mendatar - */
+  html.land-tab .stab-tabs{
+    flex-wrap:nowrap!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    gap:.4rem;padding:.5rem .55rem;scrollbar-width:thin}
+  html.land-tab .stab-tabs::-webkit-scrollbar{height:7px}
+  html.land-tab .stab-tabs::-webkit-scrollbar-thumb{background:var(--red);border-radius:7px}
+  html.land-tab .stab-tabs a{flex:0 0 auto;font-size:.72rem;padding:.32rem .58rem}
+  html.land-tab .z-side,
+  html.land-tab .mag-side{position:static!important;top:auto!important;
+    max-height:none!important;overflow:visible!important}
+
+  /* ---------- 32.6 Kerangka: kolom tetap mendatar, bukan menumpuk ----
+     Di bawah 1181px kerangka .z3col aslinya sudah menumpuk (rail di atas,
+     lalu artikel, lalu sidebar). Di sini kolom dipulihkan: artikel di kiri,
+     panel tab di kanan — jadi lebar 963–1109px benar-benar terpakai. */
+  html.land-tab .z3col{grid-template-columns:minmax(0,1fr) 292px!important;gap:1.4rem}
+  html.land-tab .z3col .z-main{grid-column:1!important;grid-row:2!important}
+  html.land-tab .z3col .z-side{grid-column:2!important;grid-row:2!important}
+  html.land-tab .z3col>.mag-shell{
+    grid-column:1/-1!important;grid-row:3!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) 292px!important;
+    gap:1.4rem!important;align-items:start;width:100%}
+  html.land-tab .z3col>.mag-shell>.mag-main{grid-column:1;grid-row:1}
+  html.land-tab .z3col>.mag-shell>.mag-side{grid-column:2;grid-row:1}
+  html.land-tab .z3col>.mag-featured-sec{grid-column:1/-1!important;grid-row:2!important}
+
+  /* ---------- 32.7 HERO / KARUSEL -> jauh lebih pendek --------------- */
+  html.land-tab .hero,
+  html.land-tab .slider,
+  html.land-tab .slide,
+  html.land-tab .slider-track{
+    min-height:0!important;
+    height:min(clamp(220px,30vw,300px),54vh)!important}
+  html.land-tab .hero{align-items:center;padding:0}
+  html.land-tab .slide{align-items:center}
+  html.land-tab .hero-content{padding:1.6rem 0;max-width:min(760px,92%)}
+  html.land-tab .slide-content{padding:1.1rem 0;max-width:min(760px,92%)}
+  html.land-tab .slide-content h1,
+  html.land-tab .hero h1{font-size:clamp(1.4rem,3vw,2rem);margin-bottom:.6rem}
+  html.land-tab .hero-sub{display:none}
+  html.land-tab .hero-kicker{margin-bottom:.75rem;padding:.35rem .8rem}
+  html.land-tab .hero-stats{margin-top:1.1rem;padding-top:.9rem;gap:1.6rem}
+  html.land-tab .hero-stats .stat b{font-size:1.35rem}
+  html.land-tab .slider-btn{width:40px;height:40px}
+
+  /* ---------- 32.8 Blok lain -> 3–4 kolom / lebih rapat ------------- */
+  html.land-tab .rel-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html.land-tab .mega-band{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  html.land-tab .footer-grid{grid-template-columns:1.4fr 1fr 1fr 1.2fr!important;gap:1.7rem}
+  html.land-tab .gal-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html.land-tab .gadget-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html.land-tab .zn-foot-strip,
+  html.land-tab .zn-foot-strip--4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html.land-tab .ap-card{flex-direction:row;text-align:left;gap:1.2rem}
+  html.land-tab .ap-social{justify-content:flex-start}
+
+  /* ---------- 32.9 Tipografi & jarak -> dirapatkan ------------------ */
+  html.land-tab .section{padding:2.9rem 0}
+  html.land-tab .zn-sec-block{padding:1.9rem 0 0}
+  html.land-tab .mag-featured-sec{padding:1.9rem 0 0}
+  html.land-tab .rel-sec{padding:2.5rem 0 2.8rem}
+  html.land-tab .glos-cta{margin-top:2rem}
+  html.land-tab .article p{font-size:.97rem;line-height:1.7}
+  html.land-tab .zn-head{font-size:1rem;padding:.7rem .95rem}
+  html.land-tab .zn-body{padding:1.1rem}
+  html.land-tab .footer-grid{padding:2.8rem 0 2.1rem}
+}  /* akhir @media(min-width:901px) and (max-width:1180px) */
+
+/* ---------- 32.10 Rel kartu pendamping: hanya bila ia sudah selebar baris --
+   Di atas 1060px .mf-side masih menjadi kolom KEDUA yang sempit (426px pada
+   1180px), jadi menjadikannya rel mendatar di sana hanya akan mengurung tiga
+   kartu di dalam 426px — lebih buruk daripada susunan tiga kolom aslinya.
+   Rel baru dipakai pada 901–1060px, tempat .mf-side sudah melebar penuh
+   (847–963px) sehingga tiga kartu benar-benar terlihat berdampingan. */
+@media(min-width:901px) and (max-width:1060px){
+  html.land-tab .mf-side,
+  html.land-tab .mf-grid.wide .mf-side{
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:.85rem;
+    grid-template-columns:none!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+    padding:.15rem .1rem .55rem;scrollbar-width:thin}
+  html.land-tab .mf-side::-webkit-scrollbar{height:7px}
+  html.land-tab .mf-side::-webkit-scrollbar-thumb{background:var(--red);border-radius:7px}
+  html.land-tab .mf-side .mf-card{flex:0 0 auto;width:min(330px,46vw)}
+  html.land-tab .mf-side .mf-card .mf-thumb{width:80px;aspect-ratio:1/1}
+  html.land-tab .mf-card h4{font-size:.9rem}
+}
+
+/* ---------- 32.11 MODE GELAP ---------------------------------------
+   Chip peta zona memakai latar terang di mode terang; di mode gelap dibalik
+   agar tetap kontras. Dipisah dari blok utama supaya selektor tema tetap
+   spesifik, dan disalin untuk tema "Otomatis" (tanpa atribut data-theme). */
+@media(min-width:901px) and (max-width:1180px){
+  [data-theme=dark] html.land-tab .srail-list a{
+    background:#ffffff12;border-color:#ffffff26}
+  [data-theme=dark] html.land-tab .srail-list a:hover{
+    background:#c0392b33;border-color:var(--gold)}
+  [data-theme=dark] html.land-tab .srail-list .srail-h2{color:#e9e4da}
+  [data-theme=dark] html.land-tab .srail-list .srail-n{color:var(--gold)}
+  [data-theme=dark] html.land-tab .srail-list a.active{
+    background:var(--red);border-color:var(--gold)}
+  [data-theme=dark] html.land-tab .srail-list a.active .srail-h2,
+  [data-theme=dark] html.land-tab .srail-list a.active .srail-n{color:#fff}
+  [data-theme=dark] html.land-tab .srail-h{border-bottom-color:#ffffff26}
+  [data-theme=dark] html.land-tab .srail-t{color:var(--gold)}
+  [data-theme=dark] html.land-tab .mw-grid .mw-card{background:var(--black-2)}
+}
+@media(min-width:901px) and (max-width:1180px){
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme]).land-tab .srail-list a{
+      background:#ffffff12;border-color:#ffffff26}
+    html:not([data-theme]).land-tab .srail-list .srail-h2{color:#e9e4da}
+    html:not([data-theme]).land-tab .srail-list .srail-n{color:var(--gold)}
+    html:not([data-theme]).land-tab .srail-list a.active{
+      background:var(--red);border-color:var(--gold)}
+    html:not([data-theme]).land-tab .srail-list a.active .srail-h2,
+    html:not([data-theme]).land-tab .srail-list a.active .srail-n{color:#fff}
+    html:not([data-theme]).land-tab .srail-h{border-bottom-color:#ffffff26}
+    html:not([data-theme]).land-tab .srail-t{color:var(--gold)}
+  }
+}
+
+/* ---------- 32.12 "KURANGI GERAKAN" --------------------------------
+   Susunan mendatar tetap dipakai; animasi, transisi, dan gulir-halus mati. */
+@media(prefers-reduced-motion:reduce){
+  html.land-tab .srail-list,
+  html.land-tab .mf-side,
+  html.land-tab .mw-grid,
+  html.land-tab .stab-tabs,
+  html.land-tab .z-rail .sw-chips--rail{scroll-behavior:auto!important}
+  html.land-tab .srail-list a,
+  html.land-tab .mf-card,
+  html.land-tab .mw-card,
+  html.land-tab .stab-tabs a{transition:none!important;animation:none!important}
+  html.land-tab .srail-list a.active{animation:none!important;box-shadow:none!important}
+  html.land-tab .mf-card:hover,
+  html.land-tab .mw-card:hover{transform:none!important}
+  html.land-tab .slider-track{transition:none!important}
+  html.land-tab .srail-thumb{transition:none!important}
+}
+
+/* ---------- 32.13 Perbaikan warisan pada rentang tablet -------------
+   Dua cacat lama yang juga muncul di rentang 901–1180px dan dapat
+   menimbulkan gulir mendatar. Keduanya diperbaiki HANYA di dalam cakupan
+   ini, tidak mengubah tampilan di luar rentang tersebut.
+   (a) .split memakai satu track 1fr (style.css, max-width:1024px), sehingga
+       anak yang duduk di kolom kedua jatuh ke track IMPLISIT selebar isi dan
+       melebar melewati wadahnya. minmax(0,1fr) + grid-column:1 menutupnya.
+   (b) butir .check-list memuat kata panjang tanpa pemisah sehingga tidak
+       dapat menyusut di bawah min-content; penanda .ck dikunci 22px. */
+@media(min-width:901px) and (max-width:1180px){
+  .split{grid-template-columns:minmax(0,1fr)!important}
+  .split>*{grid-column:1!important;min-width:0!important}
+  .split-text,.split-text>*{min-width:0}
+  .check-list li{min-width:0;overflow-wrap:break-word}
+  .check-list li>.ck{flex:0 0 22px}
+}
+
+/* ---------- 32.14 Cetak ------------------------------------------- */
+@media print{
+  html.land-tab .mf-side,
+  html.land-tab .mw-grid,
+  html.land-tab .srail-list,
+  html.land-tab .stab-tabs,
+  html.land-tab .z-rail .sw-chips--rail{display:block!important;overflow:visible!important}
+  html.land-tab .mf-side .mf-card,
+  html.land-tab .mw-grid .mw-card{width:auto!important}
+  html.land-tab .z-rail{display:none!important}
+}
+
+/* =====================================================================
+   v33 · PERBAIKAN KARTU UNGGULAN TERJEPIT + PEMBUNGKUS <picture> WebP
+
+   PERBAIKAN #4 — "kartu unggulan terjepit".
+   Cacat nyata (terukur): pada 681–760px kolom teks .mf-card tinggal
+   46–71px (≈5–8 karakter per baris, judul jadi 5 baris), dan pada
+   560–680px kolom teks tinggal 32–70px. Penyebabnya BUKAN .mf-grid,
+   melainkan kombinasi dua aturan:
+     · baris 286  .mf-grid.wide .mf-side{grid-template-columns:repeat(3,1fr)}
+       — spesifisitas (0,3,0), DI LUAR media query; dan
+     · baris 333  @media(max-width:680px){.mf-side{...1fr}}
+       — spesifisitas (0,1,0). Query media TIDAK menambah spesifisitas,
+       sehingga aturan 1fr di 680px KALAH oleh 0,3,0 di baris 286. Kartu
+       tetap 3 kolom sampai 560px ke bawah.
+   Akibatnya pada 15 halaman, ~54 pengukuran teks kartu < 120px.
+
+   Cara memperbaiki: repeat(auto-fit,minmax(...)) dengan spesifisitas
+   JUSTRU LEBIH TINGGI daripada baris 286 (memakai gabungan .mf-side,
+   .mf-grid.wide .mf-side, dan .mf-grid>.mf-side) tetapi TANPA !important,
+   sehingga dua varian mendatar yang sudah ada tetap menang:
+     · v31 (<=900px, mendatar, tinggi<=560px) memakai
+       html.land-lebar .mf-side{display:flex;...} — (0,2,0) + !important;
+     · v32 (901–1180px, mendatar, tinggi<=640px) memakai
+       html.land-tab .mf-side{display:flex;...} — (0,2,0) + !important.
+   Karena keduanya menyetel display:flex, properti grid-template-columns
+   menjadi tidak terpakai pada kedua varian itu \u2014 jadi rel mendatar v31/v32
+   TIDAK berubah sama sekali. Aturan ini hanya menata ulang saat .mf-side
+   benar-benar masih grid.
+   ===================================================================== */
+
+/* --- 33.1 Thumbnail kartu unggulan boleh menyusut (dulu flex-shrink:0) --- */
+.mf-card .mf-thumb{flex-shrink:1;min-width:0;overflow-wrap:anywhere}
+/* v33.1b: kartu sempit (mis. pada baris kedua rel 1440px) dapat memuat
+   judul panjang tanpa memaksa melebar \u2014 dulu overflow-wrap:normal membuat
+   .mf-card tumbuh 2px melewati kolomnya. Dibatasi pada kartu unggulan saja. */
+.mf-card .mf-text,.mf-card h4,.mf-card p,.mf-card .mf-tag{overflow-wrap:anywhere}
+
+/* --- 33.2 Grid unggulan: auto-fit, bukan proporsi tetap 1.55fr/1fr ------
+   auto-fit menutup track kosong, jadi dua anak (kartu sorotan + rel
+   pendamping) tetap mengisi satu baris penuh pada lebar berapa pun. */
+.mf-grid{grid-template-columns:repeat(auto-fit,minmax(268px,1fr))}
+
+/* --- 33.3 Pembungkus <picture> tidak boleh mengubah tata letak ---------- */
+.rwp-pic{display:contents}
+
+/* --- 33.4 Rel kartu pendamping pada lebar sempit -------------------------
+   min(100%,300px) mencegah gulir mendatar di lebar sangat kecil.
+   0,3,0 + berada setelah baris 286 => menang atas repeat(3,1fr) di sana,
+   tetapi tetap kalah oleh html.land-lebar/.land-tab (yang ber-!important). */
+@media(max-width:1060px){
+  .mf-side,
+  .mf-grid.wide .mf-side,
+  .mf-grid>.mf-side{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+}
+@media(max-width:680px){
+  .mf-side,
+  .mf-grid.wide .mf-side,
+  .mf-grid>.mf-side{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+}
+
+/* --- 33.5 "Kurangi gerakan" untuk rel rail v33 ---------------------------
+   Audit v33 menemukan satu-satunya transisi yang masih berjalan di bawah
+   prefers-reduced-motion adalah .srail-list a (0,2s) \u2014 berasal dari aturan
+   v27 yang tidak pernah dibungkus blok reduced-motion. Ditutup di sini
+   tanpa mengubah tampilan saat gerakan normal. */
+@media(prefers-reduced-motion:reduce){
+  .z-rail .srail-list a,
+  .srail-list a{transition:none!important}
+}

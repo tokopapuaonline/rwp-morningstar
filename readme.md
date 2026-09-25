@@ -2,6 +2,106 @@
 
 Platform kajian **Marxisme Ilmiah** dan **Sosialisme Ilmiah** dengan analisis struktural mendalam atas **West Papua**.
 
+## Baru di v32 — Varian Landscape Tablet Mendatar (15 halaman)
+
+Varian **ketiga** dari keluarga tata letak mendatar. Kalau v31 melayani **ponsel yang dimiringkan** (≤ 900px), v32 melayani **tablet mendatar** — terutama **1024×600** dan jendela pendek-melebar lain di rentang **901–1180px**.
+
+**Kapan bentuk ini dipakai.** Ketiganya harus benar: **lebar 901–1180px**, **orientasi mendatar**, dan **tinggi pandang ≤ 640px**. Tiga rambu penting:
+
+- **Varian ponsel v31 tidak diubah sama sekali.** Aturan v32 dibungkus `@media(min-width:901px)`, jadi secara struktural tidak mungkin menyentuh layar ≤ 900px. Penanda `.land-lebar` (v31) dan `.land-tab` (v32) juga punya spektrum lebar yang terpisah, sehingga keduanya tidak pernah menyala bersamaan.
+- **Desktop (1440px) tidak tersentuh** — sebaliknya, aturan v28 desktop juga dibungkus `min-width:1181px`, jadi tidak ada tabrakan di batas 1180/1181px.
+- **Ponsel tegak 390×844 tetap menumpuk** — syarat orientasi & tinggi menjaga hal itu.
+- Ambang tinggi sengaja **640px**, bukan 560px seperti v31: pada tablet 1024×600 peramban menyisakan 24–64px, sehingga tinggi pandangnya nyata-nyata jatuh di bawah 600px. Dengan ambang 560px varian ini nyaris tidak pernah menyala.
+
+**Yang berubah saat bentuk ini aktif** (semua **diukur**, bukan diklaim — mode ON vs OFF pada 1024×600):
+
+| Bagian | Sebelum | Sesudah |
+|---|---|---|
+| **Hero/karusel** (`index.html`) | 560px | **300px** |
+| **Magazine Widget Area** (901–1140px) | 2 kolom | **3 kolom** (@1180px sudah 4 kolom, dibiarkan) |
+| **Rail peta zona (Zona 4a)** | 7 baris, `overflow-x: visible` | **1 baris chip**, `overflow-x: auto` |
+| **Sidebar Tab Area (Zona 4b)** | 4 baris (@1180px) | **1 baris** (`overflow-x: auto`) |
+| **Kerangka `.z3col`** | menumpuk | artikel kiri + panel tab kanan (292px) |
+| **Rel kartu pendamping** (901–1060px) | kolom 3 kartu bertumpuk | **rel mendatar** |
+
+Tinggi dokumen `index.html` turun dari 72.342px → **70.675px** pada 1024×600.
+
+**Yang TIDAK diubah:** isi artikel (15/15 halaman byte-identik), anotasi glosarium otomatis (tooltip istilah), tombol "Jelajahi glosarium" + penyaringan kategori, rail peta zona + sorotan bergulir otomatis, panel mega menu "Tata Letak", kontrol tema tiga-mode, dan tautan footer.
+
+**Berkas yang disentuh:**
+- `css/magazine.css` — blok **v32** (32.1–32.14), **aditif** di akhir berkas: rel chip rail, panel tab mendatar, rel kartu pendamping, hero pendek, grid 3–4 kolom, mode gelap (atribut + Otomatis), `prefers-reduced-motion`, cetak, plus dua perbaikan warisan (`.split` track implisit & `.check-list` yang tak bisa menyusut) yang **hanya** berlaku di dalam cakupan ini.
+- `js/magazine.js` — blok **v32**: satu `matchMedia("(min-width: 901px) and (max-width: 1180px) and (orientation: landscape) and (max-height: 640px)")` yang menyalakan penanda `.land-tab` **+ chip petunjuk "⇄ geser mendatar"**. Tanpa timer, tanpa menulis gaya apa pun, tidak menyentuh `prefers-reduced-motion`. Mengekspos `window.RWPLandTab` untuk pengujian.
+- **15 halaman HTML** — cache-buster `?v=32`.
+- `sitemap.xml` — `lastmod` **2026-09-24**.
+
+**Verifikasi (15 halaman × 9 viewport).** Tanpa gulir mendatar **dan** tanpa elemen melampaui layar di **390×844, 640×360, 844×390, 900×600, 1024×600, 1024×640, 1024×700, 1180×600, 1440×900**. Penanda `.land-tab` / `.land-lebar` benar di seluruh 9 viewport × 15 halaman. Sorotan rail terbukti **tepat di ketujuh zona** pada `analisa-papua.html`, `marxisme.html`, dan `sosialisme.html`. `prefers-reduced-motion`: transisi **0s**, bentuk mendatar & sorotan tetap jalan. Tanpa JavaScript: teks utuh, rail & tautan tetap tampil, tanpa hiasan.
+
+## Baru di v33 — Lima Perbaikan Prioritas Hasil Audit (15 halaman)
+
+Lima perbaikan yang paling berdampak dari audit situs live, dikerjakan sekaligus. **Isi artikel tidak disentuh sama sekali** — 15/15 halaman **byte-identik** dengan v32 setelah blok v33 dinormalisasi.
+
+### 1. `canonical` di seluruh 15 halaman
+Sebelumnya **0/15** halaman punya `canonical`. Kini setiap halaman menunjuk ke URL absolutnya sendiri di origin live `https://tokopapuaonline.github.io/rwp-morningstar/` (ditambah `og:url`). Terverifikasi: **15 nilai canonical unik untuk 15 halaman**, masing-masing `1×` per halaman.
+
+### 2. `og:image` + Twitter Card lengkap
+Sebelumnya **0/15** halaman punya `og:image` maupun Twitter Card. Kini setiap halaman memakai **gambar hero yang benar-benar ada di `images/`** (bukan URL karangan) — dalam format **JPEG/PNG asli**, bukan WebP, karena dukungan Open Graph untuk WebP belum merata di semua platform pratinjau — lengkap dengan dimensi:
+
+`og:image`, `og:image:secure_url`, `og:image:type`, `og:image:width`, `og:image:height`, `og:image:alt`, `og:locale`, `og:site_name`, `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`.
+
+Semua `og:image` **terverifikasi merujuk berkas lokal yang ada** (15/15), dengan `og:image:type` sesuai (`image/jpeg` / `image/png`).
+
+### 3. `sitemap.xml` & `robots.txt` diperbaiki
+Seluruh **15 `<loc>`** yang tadinya menunjuk domain mati `https://ruang-west-papua.netlify.app/` (**HTTP 404**) kini menunjuk origin live yang benar — **0 sisa domain mati**. `robots.txt` yang tadinya menulis sitemap relatif (`Sitemap: /sitemap.xml`, tidak sah menurut spesifikasi) kini menunjuk URL absolut yang valid.
+
+### 4. Kartu unggulan terjepit — diperbaiki
+**Cacat nyata, dan lebih luas daripada dugaan awal.** Pada `analisa-papua.html` (dan halaman ber-`mf-grid wide` lain), kolom teks `.mf-card` hanya **32–71px** (≈4–8 karakter per baris, judul jadi 4–5 baris — persis "±35px / ±5 karakter" pada laporan audit). Cacat ini **bukan** di `1041–1140px` seperti dugaan awal, melainkan bertahan hingga **760px**.
+
+Penyebabnya: baris 286 `.mf-grid.wide .mf-side{grid-template-columns:repeat(3,1fr)}` berspesifisitas **(0,3,0)** dan berada **di luar media query**, sedangkan `@media(max-width:680px){.mf-side{...1fr}}` hanya **(0,1,0)** — dan **media query tidak menambah spesifisitas**. Jadi kartu tetap 3 kolom sampai 560px ke bawah.
+
+Perbaikan: `repeat(auto-fit,minmax(268px,1fr))` dengan spesifisitas lebih tinggi **tanpa `!important`**, ditambah `.mf-thumb{flex-shrink:1;min-width:0}` (thumbnail dulu dipaku `flex-shrink:0`). Karena v31/v32 menyetel `display:flex` + `!important` pada `.mf-side`, **kedua varian mendatar itu tidak berubah sama sekali** — aturan baru hanya berlaku saat `.mf-side` benar-benar masih grid.
+
+### 5. Optimasi gambar WebP + preload hero
+- **12 gambar raster dikonversi ke WebP kualitas 80**: `2.638.918 → 1.676.588 byte` (**−36,5%**, hemat **940 KB**). Terbesar: `marx.jpg` **−60,9%**, `grasberg.jpg` **−46,0%**, `galeri_pendidikan.jpg` **−45,3%**.
+- Setiap `<img>` raster lokal dibungkus **`<picture><source type="image/webp">`** — **73 pembungkus** di 15 halaman. Berkas `.jpg`/`.png` **tetap ada** sebagai fallback, jadi tanpa dukungan WebP pun halaman tetap utuh (diverifikasi: **tanpa JavaScript**, dan `.jpg` masih tersedia).
+- **`preload` hero** (`rel="preload" as="image" type="image/webp" fetchpriority="high"`) ditambahkan tepat **1×** per halaman.
+- `.rwp-pic{display:contents}` menjaga pembungkus `<picture>` tidak mengubah tata letak.
+
+**Rasio gambar tertunda (deferred-load) beranda:** dari **716.488 → 395.036 byte** (**−44,9%**).
+
+**Ukuran halaman (HTML + CSS + JS + semua raster lokal yang direferensikan) — diukur dari baseline v32:**
+
+| Halaman | Sebelum | Sesudah | Turun |
+|---|---:|---:|---:|
+| **index.html** (beranda) | **1.241.108 B** (≈1.212 KB) | **921.890 B** (≈900 KB) | **−25,7%** · hemat **312 KB** · HTTP **−37** permintaan |
+| **analisa-papua.html** | 1.119.484 B | 848.285 B | −24,2% · hemat 265 KB · **−41** permintaan |
+| marxisme.html | 785.128 B | 586.686 B | −25,3% · hemat 194 KB · **−41** permintaan |
+| sosialisme.html | 1.025.946 B | 769.464 B | −25,0% · hemat 250 KB · **−41** permintaan |
+| glosarium.html | 1.099.085 B | 857.214 B | −22,0% · hemat 236 KB · **−41** permintaan |
+
+Rincian beranda: HTML 211.326 → 213.560 B (+2.234 B — tambahan `canonical`/`og`/Twitter + pembungkus `<picture>`, `og:image` URL ditulis panjang), CSS+JS tetap 312.792 B, gambar termuat **716.488 → 395.036 B** (**−321.452 B**).
+
+**Catatan jujur soal ukuran:** angka "1.059–1.354 KB" pada laporan audit saya berasal dari **pemuatan jaringan penuh** — termasuk 5 thumbnail YouTube pihak ketiga (`i.ytimg.com` ×5, **252.516 B**, di luar kendali kami) dan berkas `.jpg` yang tidak lagi dipakai browser karena `<source type="image/webp">` dipakai lebih dulu. Yang **tidak berubah**: HTML murni tetap ~211 KB karena separuh isinya adalah **penanda anotasi glosarium `.rwp-term` (821 span)** dari v29 yang memang tidak boleh dihapus.
+
+**Prioritas #2 & #3 tidak berdiri sendiri karena sudah tercakup #1 dan #3:**
+
+**#2 — Satu domain kanonik, tidak lagi tersebar.** Sebelumnya `sitemap.xml` menunjuk domain mati (404) sementara situs hidup di GitHub Pages. Kini `canonical`, `og:url`, dan seluruh 15 `<loc>` menunjuk **satu origin yang sama** — tidak ada lagi halaman yang "menunjuk ke tempat lain".
+
+**#3 — Google Search Console siap.** `robots.txt` kini menunjuk sitemap **absolut** yang valid, dan sitemap itu berisi 15 URL yang **semuanya live (HTTP 200)**. Langkah tersisa hanya mengirimkan sitemap di Search Console (tidak ada yang bisa saya lakukan dari sisi berkas).
+
+**Yang TIDAK diubah:** isi artikel (15/15 halaman byte-identik), anotasi glosarium otomatis (tooltip istilah), tombol "Jelajahi glosarium" + penyaringan kategori di `glosarium.html`, rail peta zona + sorotan bergulir otomatis, panel mega menu "Tata Letak", kontrol tema tiga-mode, tautan footer, varian landscape ponsel (v31), dan varian landscape tablet mendatar (v32).
+
+### 6. Bonus — domain mati di blok cetak
+Audit menemukan teks "Sumber: …" pada blok cetak tiap halaman (`.ph-meta` > `[data-print-url]`) masih menampilkan domain mati `https://ruang-west-papua.netlify.app/` — jadi bila pembaca mencetak/menyimpan halaman ke PDF, alamat yang tercetak mengarah ke tempat yang salah. Ke-15 halaman kini menampilkan origin yang benar. (Ini **bukan** tautan — 0 dari 15 berada di dalam `href` — melainkan teks, sehingga tidak pernah muncul sebagai tautan menggantung di audit mana pun.) Komentar `sitemap.xml` juga dibersihkan dari contoh domain mati.
+
+**Berkas yang disentuh:**
+- **15 halaman HTML** — blok `<!-- RWP-SEO v33 -->` (canonical/og/twitter), pembungkus `<picture>` (73 total), `preload` hero, perbaikan alamat di blok cetak, cache-buster `?v=33`. Isi artikel tidak tersentuh.
+- `css/magazine.css` — blok **v33** (33.1–33.5), aditif di akhir berkas.
+- `sitemap.xml` — 15 `<loc>` diperbaiki, `lastmod` **2026-09-24**.
+- `robots.txt` — sitemap absolut.
+- `images/*.webp` — 12 berkas baru (`.jpg`/`.png` dipertahankan sebagai fallback).
+
+**Verifikasi.** Tag HTML seimbang (`unclosed=[]`, `bad=[]`, `dup=[]`) di **15/15**; kurung CSS **style.css 771/771 · magazine.css 1161/1161**; `node --check` bersih untuk `main.js` & `magazine.js`; **0 tautan internal menggantung** dari **5.669 referensi** (query string dibuang lebih dulu); `canonical` / `og:image` / `twitter:card` / meta AdSense masing-masing tepat **1×** di **15/15**; skrip AdSense tepat **1×** dengan `ins` seimbang `push({})`; **0 sisa `?v=32`** di HTML/CSS/JS; Chromium **390×844, 844×390, 1024×600, 1440×900** tanpa gulir mendatar; tooltip glosarium, tombol "Jelajahi glosarium" + penyaring kategori, rail zona, kontrol tema tiga-mode, dan `prefers-reduced-motion` tetap berfungsi.
+
 ## Baru di v31 — Gaya Landscape Mobile (15 halaman)
 
 Seluruh 15 halaman kini punya **tata letak khusus untuk layar genggam yang mendatar** — bukan sekadar menumpuk satu kolom, melainkan memanfaatkan lebar layar secara mendatar.

@@ -1655,3 +1655,89 @@
     h: function () { return window.innerHeight; }
   };
 })();
+
+
+/* =====================================================================
+   v32 · PENANDA SUSUNAN LANDSCAPE TABLET MENDATAR
+   Tugas blok ini SATU SAJA: menyalakan penanda .land-tab pada <html>
+   ketika layar berada dalam keadaan tablet mendatar:
+       lebar 901–1180px  ·  orientasi mendatar  ·  tinggi <= 640px
+   Seluruh aturan tampilannya HANYA ada di css/magazine.css (blok v32),
+   jadi tidak ada gaya yang ditulis dua kali.
+
+   Kenapa terpisah dari blok v31 dan bukan digabung? Karena keduanya
+   melayani spektrum lebar yang BERBEDA dan tidak boleh bertumpang:
+     v31  -> <= 900px, mis. 844x390 & 640x360   (ponsel dimiringkan)
+     v32  -> 901–1180px, mis. 1024x600 & 1180x600 (tablet mendatar)
+   Ambang tinggi v32 sengaja 640px, bukan 560px seperti v31: tablet
+   mendatar yang paling lazim (1024x600) masih menyisakan 24–64px untuk
+   bilah peramban, sehingga tinggi pandangnya jatuh ke bawah 600px —
+   dengan ambang 560px varian ini nyaris tidak pernah menyala.
+   Penanda .land-lebar milik v31 juga sudah mematikan dirinya sendiri di
+   atas 900px, dan aturan-aturan v32 dibungkus min-width:901px, sehingga
+   tidak ada aturan yang saling menimpa meskipun keduanya menyala.
+
+   Tanpa JavaScript: kelas tidak pernah dipasang dan halaman tampil
+   menumpuk normal — teks utuh, semua tautan tetap dapat diklik.
+   "Kurangi gerakan" tidak dipengaruhi: blok ini tidak menganimasikan
+   apa pun, hanya menambah/menghapus satu kelas.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  var root = document.documentElement;
+  var mq = null;
+  try {
+    mq = window.matchMedia("(min-width: 901px) and (max-width: 1180px) and (orientation: landscape) and (max-height: 640px)");
+  } catch (e) { mq = null; }
+  if (!mq) return;   // mesin tanpa matchMedia: biarkan tata letak normal
+
+  var hint = null;
+
+  function apply() {
+    var on = !!mq.matches;
+
+    if (root.classList.contains("land-tab") !== on) {
+      root.classList.toggle("land-tab", on);
+    }
+
+    /* Petunjuk "geser mendatar" pada rail peta zona. Hanya hiasan
+       (aria-hidden), hanya muncul selama bentuk mendatar aktif, dan
+       ditempatkan pada baris kepala kartu sehingga tidak pernah menutupi
+       satu pun tautan zona. Blok v31 memakai elemen yang sama; keduanya
+       tidak pernah menyala bersamaan karena spektrum lebarnya terpisah. */
+    if (on) {
+      var rail = document.querySelector("[data-srail]");
+      var head = rail ? rail.querySelector(".srail-h") : null;
+      if (head && !head.querySelector(".land-hint")) {
+        if (!hint) {
+          hint = document.createElement("span");
+          hint.className = "land-hint";
+          hint.setAttribute("aria-hidden", "true");
+          hint.textContent = "\u21c4 geser mendatar";
+        }
+        head.appendChild(hint);
+      }
+    } else if (root.classList.contains("land-lebar")) {
+      /* bentuk ponsel mendatar (v31) sedang aktif — biarkan blok v31 yang
+         mengurus petunjuknya. */
+    } else if (hint && hint.parentNode) {
+      hint.parentNode.removeChild(hint);
+    }
+  }
+
+  apply();
+  if (mq.addEventListener) mq.addEventListener("change", apply);
+  else if (mq.addListener) mq.addListener(apply);
+  window.addEventListener("orientationchange", apply, { passive: true });
+  window.addEventListener("resize", apply, { passive: true });
+  window.addEventListener("load", apply);
+
+  /* ekspos kecil untuk pengujian */
+  window.RWPLandTab = {
+    on: function () { return root.classList.contains("land-tab"); },
+    mq: function () { return !!mq.matches; },
+    w: function () { return window.innerWidth; },
+    h: function () { return window.innerHeight; }
+  };
+})();
