@@ -2,6 +2,38 @@
 
 Platform kajian **Marxisme Ilmiah** dan **Sosialisme Ilmiah** dengan analisis struktural mendalam atas **West Papua**.
 
+## Baru di v34 — Materi Tiga Hukum Dialektika yang Diperluas (`marxisme.html`)
+
+Bagian **4. Tiga Hukum Dialektika** di `marxisme.html` dikembangkan dari **1.985 karakter menjadi 51.394 karakter** — kira-kira **26 kali** lebih panjang — menjadi bagian tersendiri yang dapat dipakai untuk belajar mandiri.
+
+**Yang baru.** Sebelumnya bagian 4 hanya tiga paragraf singkat. Sekarang ia menjadi tujuh subbagian:
+
+| Subbagian | Isi |
+|---|---|
+| **4.1 Hukum I** — Kesatuan dan Perjuangan Dua Pihak yang Berlawanan | Konsep; asal-usul Hegel, Marx, Engels, Lenin, Mao; contoh umum; lima kesalahan tafsir; kaitannya dengan hukum lain |
+| **4.2 Hukum II** — Perubahan Kuantitas Menjadi Kualitas | Struktur yang sama, termasuk pembedaan **perbaikan** dari **perubahan jenis** |
+| **4.3 Hukum III** — Negasi atas Negasi | Struktur yang sama, termasuk contoh biji Engels dan pola ekspropriasi Marx |
+| **4.4 Penerapan pada West Papua** | Analisis khusus dalam kerangka **Hak Menentukan Nasib Sendiri** |
+| **4.5 Tabel Ringkas** | Enam kolom: hukum, pertanyaan yang dijawab, inti rumusan, karya rujukan, contoh umum, penerapan pada Papua |
+| **4.6 Daftar Istilah Kunci** | 15 istilah, masing-masing bertaut ke definisi lengkap di `glosarium.html` |
+| **4.7 Pertanyaan Refleksi** | 9 pertanyaan berkelompok: menemukan pertentangan, menakar lompatan, membaca arah |
+
+**Penerapan pada Papua** (4.4) dibagi tiga bagian yang mengikuti ketiga hukum:
+
+- **Kontradiksi utama dan kontradiksi non-antagonis di Papua** — tabel yang memisahkan pertentangan **antagonis** dari **non-antagonis** beserta cara penyelesaiannya masing-masing, dengan penekanan pada ajaran Mao: kesalahan terbesar gerakan adalah memperlakukan calon sekutu sebagai musuh.
+- **Akumulasi kuantitatif menuju lompatan kualitatif** — tabel empat jalur penumpukan (kesadaran, pengalaman organisasi, kondisi material, ketidakseimbangan pembangunan), dengan catatan Lenin bahwa **kemarahan saja tidak cukup** bila organisasi belum siap.
+- **Pola negasi atas negasi** — tabel tiga tahap sejarah perjuangan: hak kolektif atas tanah, pengambilalihan kewenangan dari luar, lalu tuntutan penentuan nasib sendiri yang memulihkan **isi** tahap awal pada tingkat yang lebih tinggi.
+
+**Catatan metodologis yang dicantumkan di dalam halaman.** Bagian 4.4 dibuka dengan peringatan bahwa analisis itu bergerak pada tingkat **kerangka**, bukan hasil penelitian lapangan — dan bahwa setiap penggunaan praktis tetap menuntut analisis konkret atas situasi konkret, agar tidak berubah menjadi pemaksaan skema.
+
+**Konsistensi gaya & teknis.** Blok baru dibungkus penanda `div.rwp-dj`, dan **seluruh** aturan CSS v34 bersarang di dalamnya, sehingga **tidak ada halaman lain yang tersentuh**. Warna memakai token `:root` yang sudah ada, jadi mode terang, mode gelap manual, dan mode Otomatis ikut berubah sendiri. Anotasi glosarium otomatis tetap bekerja: 74 istilah pada bagian ini ditandai `span.rwp-term` dengan **slug yang sudah ada di glosarium** — tidak ada slug baru yang dikarang. Sidik jari baru yang mudah diperiksa: **kata `rwp-dj` 1×** pada `marxisme.html`, **1×** tampil di HTML, **0×** di 14 halaman lain; **tabel** pada bagian ini naik dari 0 menjadi **5**; total `<h3>` di halaman naik menjadi **68**; cache-buster menjadi **`?v=34`** (63 referensi, sisa `?v=33` = 0). Diverifikasi di Chromium: **60 kombinasi** (15 halaman × 4 viewport: 390×844, 844×390, 1024×600, 1440×900) **tanpa gulir mendatar dan tanpa galat halaman**; kontras **0 gagal dari 371 baris** di kedua mode tema; tooltip glosarium, tombol "Jelajahi glosarium", rail zona, tema tiga-mode, varian landscape v31/v32, dan `prefers-reduced-motion` semuanya tetap bekerja; `js/*.js` dan `css/style.css` **byte-identik dengan v33**.
+
+### Tiga cacat nyata yang ditemukan &amp; diperbaiki pada v34
+
+1. **Butir daftar di dalam kotak merah tidak terbaca (mode terang).** Butir pada kotak "callout" berwarna merah mewarisi warna teks situs `#3a3a42` di atas gradien merah — kontras terukur **1,18**, jauh di bawah ambang 4,5. Ini mengenai **9 butir pertanyaan refleksi**. Diperbaiki dengan memakai warna teks yang sama seperti `.article .callout p` bawaan situs (`#f3d9d4`) dan penanda butir emas. Hasil: **0 dari 371 baris teks gagal** di mode terang dan gelap.
+2. **Tautan rujukan glosarium di bawah ambang.** Warna `--red` (`#c0392b`) di atas latar krem menghasilkan kontras **4,29**. Diperbaiki menjadi `#b32b1f` (**5,05**), dengan sorot emas saat hover.
+3. **Tautan jangkar tertutup header sticky.** Situs sudah memberi `scroll-margin-top` untuk zona, tetapi **tidak** untuk judul bagian: membuka `marxisme.html#hukum-1` menempatkan judul tepat di `top=0` sementara header menempati 0–55 px (ponsel) / 0–193 px (desktop). Ditambahkan `scroll-margin-top` khusus judul di dalam `.rwp-dj` (200 px desktop, 80 px pada lebar ≤900 px). Terukur: delapan jangkar baru mendarat di **top=200** pada 390 px **dan** 1440 px, dan **jangkar lama terukur identik dengan v33** (`#sumber` 0→0, `#zona-artikel` 96→96) — nol regresi.
+
 ## Baru di v32 — Varian Landscape Tablet Mendatar (15 halaman)
 
 Varian **ketiga** dari keluarga tata letak mendatar. Kalau v31 melayani **ponsel yang dimiringkan** (≤ 900px), v32 melayani **tablet mendatar** — terutama **1024×600** dan jendela pendek-melebar lain di rentang **901–1180px**.
@@ -94,7 +126,7 @@ Rincian beranda: HTML 211.326 → 213.560 B (+2.234 B — tambahan `canonical`/`
 Audit menemukan teks "Sumber: …" pada blok cetak tiap halaman (`.ph-meta` > `[data-print-url]`) masih menampilkan domain mati `https://ruang-west-papua.netlify.app/` — jadi bila pembaca mencetak/menyimpan halaman ke PDF, alamat yang tercetak mengarah ke tempat yang salah. Ke-15 halaman kini menampilkan origin yang benar. (Ini **bukan** tautan — 0 dari 15 berada di dalam `href` — melainkan teks, sehingga tidak pernah muncul sebagai tautan menggantung di audit mana pun.) Komentar `sitemap.xml` juga dibersihkan dari contoh domain mati.
 
 **Berkas yang disentuh:**
-- **15 halaman HTML** — blok `<!-- RWP-SEO v33 -->` (canonical/og/twitter), pembungkus `<picture>` (73 total), `preload` hero, perbaikan alamat di blok cetak, cache-buster `?v=33`. Isi artikel tidak tersentuh.
+- **15 halaman HTML** — blok `<!-- RWP-SEO v33 -->` (canonical/og/twitter), pembungkus `<picture>` (73 total), `preload` hero, perbaikan alamat di blok cetak, cache-buster `?v=34`. Isi artikel tidak tersentuh.
 - `css/magazine.css` — blok **v33** (33.1–33.5), aditif di akhir berkas.
 - `sitemap.xml` — 15 `<loc>` diperbaiki, `lastmod` **2026-09-24**.
 - `robots.txt` — sitemap absolut.

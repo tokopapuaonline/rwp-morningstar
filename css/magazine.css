@@ -2079,3 +2079,112 @@
   .z-rail .srail-list a,
   .srail-list a{transition:none!important}
 }
+
+/* =====================================================================
+   v34 - MATERI TIGA HUKUM DIALEKTIKA (marxisme.html, bagian 4)
+   Seluruh aturan di bawah bersarang di dalam .rwp-dj, penanda pembungkus
+   materi baru pada bagian 4. Tidak ada halaman lain yang memakai kelas
+   ini, jadi penambahan ini tidak mengubah halaman lain sama sekali.
+   Warna memakai token :root yang sudah ada, sehingga mode terang, mode
+   gelap manual, dan mode Otomatis (html:not([data-theme]) + gelap)
+   semuanya ikut berubah dengan sendirinya.
+   ===================================================================== */
+
+/* --- 34.1 Paragraf pembuka bagian (padanan .lead yang sudah ada) ------ */
+.rwp-dj .rwp-lead{font-size:1.06rem;line-height:1.75;color:var(--ink);font-weight:600;margin:.4rem 0 1.5rem}
+[data-theme=dark] .rwp-dj .rwp-lead{color:#efe9df}
+
+/* --- 34.2 Judul tingkat empat (H4) di dalam bagian -------------------- */
+.rwp-dj h4{font-family:var(--display);font-size:1.08rem;color:var(--ink);margin:1.7rem 0 .6rem;padding-left:.72rem;border-left:3px solid var(--red);line-height:1.35}
+
+/* --- 34.3 Daftar butir ditandai pil kecil merah-emas ------------------ */
+.rwp-dj ul{margin:.5rem 0 1.25rem 0;padding-left:0;list-style:none}
+.rwp-dj ul>li{position:relative;padding-left:1.35rem;margin-bottom:.62rem;color:var(--text)}
+.rwp-dj ul>li:before{content:"";position:absolute;left:.15rem;top:.62em;width:.46rem;height:.46rem;border-radius:2px;background:linear-gradient(135deg,var(--red),var(--gold))}
+.rwp-dj ul>li>b:first-child{color:var(--ink)}
+
+/* daftar butir yang sudah punya penanda sendiri tidak diberi penanda lagi */
+.rwp-dj .check-list{margin-top:.6rem}
+.rwp-dj .check-list>li{padding-left:0}
+.rwp-dj .check-list>li:before{display:none}
+
+/* --- 34.4 Kutipan panjang dari karya klasik -------------------------- */
+.rwp-dj blockquote{margin:1.3rem 0;padding:.9rem 1.2rem;border-left:4px solid var(--gold);background:var(--white-2);border-radius:0 var(--radius) var(--radius) 0;font-family:var(--display);font-style:italic;color:var(--ink)}
+[data-theme=dark] .rwp-dj blockquote{background:var(--black-2)}
+
+/* --- 34.5 Tabel ------------------------------------------------------- */
+.rwp-dj .table-wrap{margin:1.4rem 0}
+.rwp-dj table td{overflow-wrap:break-word}
+.rwp-dj table td:first-child{color:var(--ink)}
+.rwp-dj table td b{color:var(--ink)}
+
+/* --- 34.6 Tautan rujukan ke glosarium -------------------------------- */
+.rwp-dj .rwp-ref{display:inline-block;font-size:.9rem;font-weight:700;color:#b32b1f;border-bottom:2px solid rgba(179,43,31,.35);padding-bottom:1px;transition:color .2s,border-color .2s,background .2s}
+.rwp-dj .rwp-ref:hover{color:var(--red-dark);background:rgba(232,182,76,.16);border-bottom-color:var(--gold)}
+[data-theme=dark] .rwp-dj .rwp-ref{color:#ff8a72;border-bottom-color:rgba(255,138,114,.35)}
+[data-theme=dark] .rwp-dj .rwp-ref:hover{color:var(--gold);border-bottom-color:var(--gold)}
+@media(prefers-color-scheme:dark){
+  html:not([data-theme]) .rwp-dj .rwp-ref{color:#ff8a72;border-bottom-color:rgba(255,138,114,.35)}
+  html:not([data-theme]) .rwp-dj .rwp-ref:hover{color:var(--gold);border-bottom-color:var(--gold)}
+}
+
+/* --- 34.7 Kotak callout di dalam bagian ini --------------------------
+   .callout.gold bawaan memakai #3a2f12 di atas gradien emas; di dalam
+   .rwp-dj warna teks digelapkan lagi agar kontras jauh di atas 4,5:1.
+   Warna penanda butir juga dipatok supaya tetap terbaca di atas emas
+   maupun di atas merah, pada kedua mode tema. */
+.rwp-dj .callout h4{margin-top:0}
+/* Teks butir di dalam kotak MERAH: tanpa aturan ini warna butir mewarisi
+   --text (#3a3a42) di atas gradien merah -> kontras hanya 1,18 (GAGAL).
+   Dipakai warna yang sama dengan .article .callout p bawaan situs. */
+.rwp-dj .callout li{color:#f3d9d4}
+.rwp-dj .callout ul>li:before{background:var(--gold)}
+.rwp-dj .callout b,
+.rwp-dj .callout p>b,
+.rwp-dj .callout ul>li>b:first-child{color:#fff}
+.rwp-dj .callout.gold p,
+.rwp-dj .callout.gold li,
+.rwp-dj .callout.gold{color:#2b2210}
+.rwp-dj .callout.gold b,
+.rwp-dj .callout.gold p>b,
+.rwp-dj .callout.gold ul>li>b:first-child{color:#2b2210}
+.rwp-dj .callout.gold ul>li:before{background:#2b2210}
+.rwp-dj .callout ul{list-style:none}
+.rwp-dj .callout li{margin-bottom:.5rem}
+
+/* --- 34.7b Landasan jangkar (header sticky setinggi 55px) ------------
+   Situs sudah memakai scroll-margin-top untuk zona, tetapi TIDAK untuk
+   judul bagian. Akibatnya membuka tautan seperti marxisme.html#hukum-1
+   menempatkan judul tepat di garis atas, lalu tertutup header sticky.
+   Diukur: rect.top judul = 0 sementara header menempati 0-55px.
+   Diberikan hanya pada judul di dalam .rwp-dj, jadi halaman lain tidak
+   tersentuh dan tidak ada satu pun tata letak yang berubah. */
+.rwp-dj h2[id],.rwp-dj h3[id],.rwp-dj h4[id]{scroll-margin-top:200px}
+@media(max-width:900px){
+  .rwp-dj h2[id],.rwp-dj h3[id],.rwp-dj h4[id]{scroll-margin-top:80px}
+}
+
+/* --- 34.8 Responsif -------------------------------------------------- */
+@media(max-width:680px){
+  .rwp-dj .rwp-lead{font-size:1rem;line-height:1.7}
+  .rwp-dj h4{font-size:1rem}
+  .rwp-dj .callout{padding:1.2rem 1.15rem}
+  .rwp-dj .check-list li{font-size:.93rem}
+  .rwp-dj .table-wrap table{font-size:.88rem}
+  .rwp-dj .rwp-ref{font-size:.86rem}
+}
+
+/* --- 34.9 Hormati prefers-reduced-motion ----------------------------- */
+@media(prefers-reduced-motion:reduce){
+  .rwp-dj .rwp-ref{transition:none!important}
+}
+
+/* --- 34.10 Cetak ----------------------------------------------------- */
+@media print{
+  .rwp-dj .rwp-lead{color:#000!important}
+  .rwp-dj ul>li:before{background:#000!important}
+  .rwp-dj blockquote{background:#fff!important;border-left-color:#000!important;color:#000!important}
+  .rwp-dj .rwp-ref{color:#000!important;border-bottom-color:#000!important}
+  .rwp-dj .callout,.rwp-dj .callout p,.rwp-dj .callout li,
+  .rwp-dj .callout h4,.rwp-dj .callout b{color:#000!important}
+}
